@@ -1,27 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 62.5%;
-}
-
-body {
-  font-size: 1.6rem;
-  font-family: 'Open Sans', sans-serif;
-}
-
-input,
-select,
-button,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-a {
-  text-decoration: none;
-}
 
 /* css cho form register */
 .register {
