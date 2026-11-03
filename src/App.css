@@ -665,4 +665,39 @@
 .category-banner__item:hover .category-banner__link {
   text-underline-offset: 9px;
   opacity: 0.9;
-} 
+}
+
+/* validation */
+.login__error,
+.register__error {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid #d92d4a;
+  border-radius: 3px;
+  background: #fdeef1;
+  color: #d92d4a;
+  font-size: 1.3rem;
+  text-align: left;
+}
+
+.register__footer {
+  margin-top: 16px;
+  font-size: 1.4rem;
+  color: #636d77;
+}
+
+.register__link {
+  color: #1dbfaf;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register__link:hover {
+  text-decoration: underline;
+}
+
+.login__submit:disabled,
+.register__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "fullname": "Nguyễn Thị Hân Hân",
+      "email": "hanhan123@gmail.com",
+      "password": "123456"
+    },
+    {
+      "fullname": "Nguyễn Thị Hồng Hạnh",
+      "email": "nguyenthihonghanh123@gmail.com",
+      "password": "123456",
+      "id": "KiUXk1Y_f3Q"
+    },
+    {
+      "fullname": "Nguyễn Thị Hồng Hạnh",
+      "email": "nguyenthihonghanh456@gmail.com",
+      "password": "123456",
+      "id": "Y8y68-5uG-k"
+    }
+  ],
+  "brands": [
+    {
+      "id": "1",
+      "name": "Casio"
+    },
+    {
+      "id": "2",
+      "name": "Citizen"
+    }
+  ],
+  "watches": [
+    {
+      "id": "1",
+      "name": "Casio MTP-1374",
+      "brand": "Casio",
+      "price": 2500000,
+      "gender": "male",
+      "image": "/images/casio-1374.jpg",
+      "description": "Đồng hồ nam dây kim loại",
+      "stock": 20
+    }
+  ],
+  "orders": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
