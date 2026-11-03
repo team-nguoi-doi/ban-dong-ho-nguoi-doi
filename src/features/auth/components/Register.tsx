@@ -3,12 +3,12 @@ import {useForm} from "react-hook-form";
 import {type RegisterForm, registerVal} from "../utils/validation.ts";
 import {zodResolver} from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-import {useDispatch} from "react-redux";
 import { register as registerUser } from "../authSlice.ts";
+import {useAppDispatch} from "../../../hooks/hooks.ts";
 
 function Register() {
     const [serverError, setServerError] = useState("");
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const {
         register,
@@ -16,10 +16,10 @@ function Register() {
         formState: { errors },
     } = useForm<RegisterForm>({ resolver: zodResolver(registerVal) });
 
-    const onSubmit = async ({fullname, email, password}: RegisterForm) => {
+    const onSubmit = async ({fullName, email, password}: RegisterForm) => {
         setServerError("");
         try {
-            await dispatch(registerUser({fullname, email, password})).unwrap();
+            await dispatch(registerUser({fullName, email, password})).unwrap();
             navigate("/login");
         } catch (message) {
             setServerError(typeof message === "string" ? message : "Có lỗi xảy ra");
@@ -38,7 +38,7 @@ function Register() {
 
                 {serverError && <p className="register__error">{serverError}</p>}
 
-                <div className={`register__group ${errors.fullname ? 'register__group--invalid' : ''}`}>
+                <div className={`register__group ${errors.fullName ? 'register__group--invalid' : ''}`}>
                     <label htmlFor="fullname" className="register__label">
                         Tên đầy đủ
                     </label>
@@ -48,9 +48,9 @@ function Register() {
                         placeholder="VD: Hân Hân"
                         className="register__control"
                         data-rules="required"
-                        {...register('fullname')}
+                        {...register('fullName')}
                     />
-                    <span className="register__message">{errors.fullname?.message}</span>
+                    <span className="register__message">{errors.fullName?.message}</span>
                 </div>
 
                 <div className={`register__group ${errors.email ? 'register__group--invalid' : ''}`}>

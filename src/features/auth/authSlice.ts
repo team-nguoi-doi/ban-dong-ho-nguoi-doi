@@ -1,6 +1,8 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import type { User, RegisterPayload } from "./index.ts";
+import type { User, RegisterPayload, LoginPayload } from "./index.ts";
 import { authApi } from './api/authApi.ts';
+
+const STORAGE_KEY = "user_id";
 
 interface AuthState {
     isInitialized: boolean;
@@ -33,6 +35,27 @@ export const register = createAsyncThunk<void, RegisterPayload, {rejectValue: st
             return rejectWithValue(getMessage(error));
         }
     }
-)
+);
+
+// đn action login
+export const login = createAsyncThunk<User, LoginPayload, {rejectValue: string}>(
+    'auth/login',
+    async (form, {rejectWithValue}) => {
+        try {
+            const user = await authApi.login(form);
+            localStorage.setItem(STORAGE_KEY, String(user.id));
+            return user;
+        } catch (error) {
+            return rejectWithValue(getMessage(error));
+        }
+    }
+);
+
+export const logout = createAsyncThunk(
+    'auth/logout',
+    async () => {
+        localStorage.removeItem(STORAGE_KEY);
+    }
+);
 
 export default authSlice.reducer;

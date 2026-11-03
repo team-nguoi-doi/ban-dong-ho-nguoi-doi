@@ -2,21 +2,27 @@
   "users": [
     {
       "id": "1",
-      "fullname": "Nguyễn Thị Hân Hân",
+      "fullName": "Nguyễn Thị Hân Hân",
       "email": "hanhan123@gmail.com",
       "password": "123456"
     },
     {
-      "fullname": "Nguyễn Thị Hồng Hạnh",
+      "fullName": "Nguyễn Thị Hồng Hạnh",
       "email": "nguyenthihonghanh123@gmail.com",
       "password": "123456",
       "id": "KiUXk1Y_f3Q"
     },
     {
-      "fullname": "Nguyễn Thị Hồng Hạnh",
+      "fullName": "Nguyễn Thị Hồng Hạnh",
       "email": "nguyenthihonghanh456@gmail.com",
       "password": "123456",
       "id": "Y8y68-5uG-k"
+    },
+    {
+      "fullName": "Lương Thị Hà",
+      "email": "haha123@gmail.com",
+      "password": "123456",
+      "id": "KFo2hBq2aW8"
     }
   ],
   "brands": [

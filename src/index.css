@@ -19,10 +19,38 @@ textarea {
   font-size: inherit;
 }
 
+h6,
+h5,
+h4,
+h3,
+h2,
+h1 {
+  font-family: 'LonginesSerif, Georgia', serif;
+}
+
 a {
   text-decoration: none;
 }
 
 :root {
+  --color-bg: #f4f4f4;
+  --color-surface: #ffffff;
 
+  --color-primary: #1ac7b6;
+  --color-primary-hover: #17b3a4;
+  --color-primary-active: #139e91;
+  --color-on-primary: #111111;
+
+  --color-text: #1a1a1a;
+  --color-text-secondary: #636d77;
+  --color-text-muted: #8c8c8c;
+
+  --color-border: #e2e2e2;
+  --color-border-input: #8c8c8c;
+
+  --color-error: #d92d4a;
+  --color-success: #1a9e5c;
+  --color-warning: #e69a14;
+
+  --color-accent: #b8975a;
 }
