@@ -1696,3 +1696,12 @@
     gap: 1.5rem;
   }
 }
+
+/* css nút logout */
+.header__link--button {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
+}

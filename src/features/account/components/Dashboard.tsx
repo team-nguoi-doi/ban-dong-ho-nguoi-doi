@@ -1,11 +1,11 @@
 import React from 'react';
 import { useAppSelector } from '../../../hooks/hooks.ts';
 import { Link } from 'react-router-dom';
-import type { PersonalInforType } from '../utils/types.ts';
+import type { PersonalInfo } from '../utils/types.ts';
 import { MOCK_ORDERS } from '../utils/ordersMock';
 
 export const Dashboard: React.FC = () => {
-    const user = useAppSelector((state) => state.auth.user) as PersonalInforType | null;
+    const user = useAppSelector((state) => state.auth.user) as PersonalInfo | null;
 
     const latestOrder = MOCK_ORDERS.length > 0 ? MOCK_ORDERS[0] : null;
 

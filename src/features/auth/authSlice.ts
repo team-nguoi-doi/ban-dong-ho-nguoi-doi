@@ -53,11 +53,31 @@ export const logout = createAsyncThunk(
     }
 );
 
+export const initAuth = createAsyncThunk(
+    'auth/init',
+    async () : Promise<User | null> => {
+        const id = localStorage.getItem(STORAGE_KEY);
+        if(!id) return null;
+        try {
+            return await authApi.getProfile(id);
+        } catch {
+            localStorage.removeItem(STORAGE_KEY);
+            return null;
+        }
+    }
+)
+
 const authSlice = createSlice({
     initialState,
     name: 'auth',
     reducers: {},
     extraReducers: (builder) => {
+        builder.addCase(initAuth.fulfilled, (state, action) => {
+            state.isInitialized = true;
+            state.user = action.payload;
+            state.isAuthenticated = action.payload !== null;
+        })
+
         builder.addCase(login.fulfilled, (state, action) => {
             state.isAuthenticated = true;
             state.user = action.payload;

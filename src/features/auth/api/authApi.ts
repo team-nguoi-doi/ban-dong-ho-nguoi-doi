@@ -26,5 +26,10 @@ export const authApi = {
         const record = data.find((u) => u.password === payload.password);
         if (!record) throw new Error('Email hoặc mật khẩu không đúng');
         return toUser(record);
-    }
+    },
+
+    async getProfile(id: string) : Promise<User> {
+        const { data } = await http.get<UserRecord>(`/users/${id}`);
+        return toUser(data);
+    },
 }
