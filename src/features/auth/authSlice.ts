@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import type { User, RegisterPayload, LoginPayload } from "./index.ts";
 import { authApi } from './api/authApi.ts';
+import { updateUserProfile, changeEmail } from '../account/accountSlice';
 
 const STORAGE_KEY = "user_id";
 
@@ -15,12 +16,6 @@ const initialState: AuthState = {
     isAuthenticated: false,
     user: null,
 }
-
-const authSlice = createSlice({
-    initialState,
-    name: 'auth',
-    reducers: {},
-})
 
 const getMessage = (e: unknown) =>
     e instanceof Error ? e.message : 'Có lỗi xảy ra, vui lòng thử lại';
@@ -57,5 +52,37 @@ export const logout = createAsyncThunk(
         localStorage.removeItem(STORAGE_KEY);
     }
 );
+
+const authSlice = createSlice({
+    initialState,
+    name: 'auth',
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(login.fulfilled, (state, action) => {
+            state.isAuthenticated = true;
+            state.user = action.payload;
+        });
+
+        builder.addCase(logout.fulfilled, (state) => {
+            state.isAuthenticated = false;
+            state.user = null;
+        });
+
+        builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+            if (state.user) {
+                state.user = {
+                    ...state.user,
+                    ...action.payload,
+                };
+            }
+        });
+
+        builder.addCase(changeEmail.fulfilled, (state, action) => {
+            if (state.user) {
+                state.user.email = action.payload.newEmail;
+            }
+        });
+    },
+});
 
 export default authSlice.reducer;
