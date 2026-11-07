@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import type { User, RegisterPayload, LoginPayload } from "./index.ts";
 import { authApi } from './api/authApi.ts';
-import { updateUserProfile } from '../account/accountSlice';
+import { updateUserProfile, changeEmail } from '../account/accountSlice';
 
 const STORAGE_KEY = "user_id";
 
@@ -74,6 +74,12 @@ const authSlice = createSlice({
                     ...state.user,
                     ...action.payload,
                 };
+            }
+        });
+
+        builder.addCase(changeEmail.fulfilled, (state, action) => {
+            if (state.user) {
+                state.user.email = action.payload.newEmail;
             }
         });
     },

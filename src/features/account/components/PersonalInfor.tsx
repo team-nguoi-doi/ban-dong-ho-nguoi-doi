@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks.ts";
 import { useForm } from "react-hook-form";
 import { type PersonalInfoForm, personalInfoVal } from "../utils/validation.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Address, PersonalInfo } from "../utils/types.ts";
 import { updateUserProfile } from "../accountSlice.ts";
-import { ChangeEmail } from "./ChangeEmail.tsx";
-import { ChangePassword } from "./ChangePassword.tsx";
+import { ChangeEmailCard, ChangeEmailForm } from "./ChangeEmail.tsx";
+import { ChangePasswordCard, ChangePasswordForm } from "./ChangePassword.tsx";
 import { AddressForm } from "./AddressForm.tsx";
 
 export const PersonalInfor: React.FC = () => {
     const [serverError, setServerError] = useState("");
+
+    // 🟢 State quản lý màn hình phụ: 'none' | 'password' | 'email'
+    const [subView, setSubView] = useState<'none' | 'password' | 'email'>('none');
 
     const [addressState, setAddressState] = useState<{
         mode: 'none' | 'select' | 'add';
@@ -29,9 +32,11 @@ export const PersonalInfor: React.FC = () => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<PersonalInfoForm>({
         resolver: zodResolver(personalInfoVal),
+        mode: 'onTouched',
         defaultValues: {
             title: user?.title || "Ms.",
             fullName: user?.fullName || '',
@@ -39,6 +44,17 @@ export const PersonalInfor: React.FC = () => {
             dateOfBirth: user?.dateOfBirth || '',
         },
     });
+
+    useEffect(() => {
+        if (user) {
+            reset({
+                title: user.title || "Ms.",
+                fullName: user.fullName || '',
+                phone: user.phone || '',
+                dateOfBirth: user.dateOfBirth || '',
+            });
+        }
+    }, [user, reset]);
 
     const onSubmit = async (values: PersonalInfoForm) => {
         try {
@@ -54,6 +70,17 @@ export const PersonalInfor: React.FC = () => {
         console.log(`Địa chỉ mới đã tạo cho [${type}]:`, newAddress);
     };
 
+    // 🟢 Chuyển sang màn hình Đổi Mật Khẩu
+    if (subView === 'password') {
+        return <ChangePasswordForm onBack={() => setSubView('none')} />;
+    }
+
+    // 🟢 Chuyển sang màn hình Đổi Email
+    if (subView === 'email') {
+        return <ChangeEmailForm onBack={() => setSubView('none')} />;
+    }
+
+    // 🟢 Chuyển sang màn hình Quản lý Địa chỉ
     if (addressState.mode !== 'none') {
         return (
             <AddressForm
@@ -130,9 +157,10 @@ export const PersonalInfor: React.FC = () => {
                     </button>
                 </form>
 
+                {/* 🟢 Truyền callback mở subView cho 2 Card */}
                 <div className="account-cards-column">
-                    <ChangePassword onOpenModal={() => console.log("Open Password Modal")} />
-                    <ChangeEmail onOpenModal={() => console.log("Open Email Modal")} />
+                    <ChangePasswordCard onOpenModal={() => setSubView('password')} />
+                    <ChangeEmailCard onOpenModal={() => setSubView('email')} />
                 </div>
             </div>
 
