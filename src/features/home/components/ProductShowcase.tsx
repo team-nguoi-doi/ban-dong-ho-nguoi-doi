@@ -107,6 +107,7 @@ const DUMMY_PRODUCTS: Product[] = [
 export default function ProductShowcase() {
     const [activeTab, setActiveTab] = useState<'new' | 'best-seller'>('new');
     const [scrollProgress, setScrollProgress] = useState<number>(0);
+    const [visibleRatio, setVisibleRatio] = useState<number>(1); // Tỉ lệ hiển thị
 
     const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -118,8 +119,13 @@ export default function ProductShowcase() {
         if (sliderRef.current) {
             const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
             const totalScroll = scrollWidth - clientWidth;
+
+            if (scrollWidth > 0) {
+                setVisibleRatio(clientWidth / scrollWidth);
+            }
+
             if (totalScroll > 0) {
-                const progress = (scrollLeft / totalScroll) * 100;
+                const progress = scrollLeft / totalScroll;
                 setScrollProgress(progress);
             } else {
                 setScrollProgress(0);
@@ -142,8 +148,15 @@ export default function ProductShowcase() {
         setScrollProgress(0);
         if (sliderRef.current) {
             sliderRef.current.scrollLeft = 0;
+            setTimeout(() => {
+                handleScroll();
+            }, 50);
         }
     };
+
+    const progressWidth = Math.min(100, Math.max(10, visibleRatio * 100));
+
+    const progressLeft = scrollProgress * (100 - progressWidth);
 
     return (
         <section className="product-showcase">
@@ -197,8 +210,9 @@ export default function ProductShowcase() {
                     <div
                         className="product-showcase__progress-fill"
                         style={{
-                            width: '25%',
-                            left: `${scrollProgress * 0.75}%`,
+                            width: `${progressWidth}%`,
+                            left: `${progressLeft}%`,
+                            transition: 'left 0.1s ease-out, width 0.3s ease',
                         }}
                     />
                 </div>
