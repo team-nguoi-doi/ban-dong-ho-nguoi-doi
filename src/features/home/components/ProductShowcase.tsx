@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import { useAddToCart } from '../../cart/useAddToCart.ts';
+import { formatPrice } from '../../cart/utils/format.ts';
 
 import imageHomeNew1 from '../../../assets/images/home-new/home-new-1.avif';
 import imageHomeNew2 from '../../../assets/images/home-new/home-new-2.avif';
@@ -14,7 +16,7 @@ export interface Product {
     id: number;
     name: string;
     description: string;
-    price: string;
+    price: number;
     image: string;
     isNew?: boolean;
     category: 'new' | 'best-seller';
@@ -25,7 +27,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 1,
         name: 'HYDROCONQUEST',
         description: '42 mm - Automatic watch - Stainless steel and ceramic bezel',
-        price: 'CHF 1,950.00',
+        price: 1950,
         image: imageHomeNew1,
         isNew: true,
         category: 'new',
@@ -34,7 +36,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 2,
         name: 'HYDROCONQUEST',
         description: '42 mm - Automatic watch - Stainless steel and ceramic bezel',
-        price: 'CHF 1,950.00',
+        price: 1950,
         image: imageHomeNew2,
         isNew: true,
         category: 'new',
@@ -43,7 +45,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 3,
         name: 'HYDROCONQUEST',
         description: '42 mm - Quartz watch - Stainless steel',
-        price: 'CHF 1,300.00',
+        price: 1300,
         image: imageHomeNew3,
         isNew: true,
         category: 'new',
@@ -52,7 +54,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 4,
         name: 'LONGINES LEGEND DIVER',
         description: '42 mm - Automatic watch - Stainless steel',
-        price: 'CHF 3,400.00',
+        price: 3400,
         image: imageHomeNew4,
         isNew: true,
         category: 'new',
@@ -61,7 +63,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 5,
         name: 'SERPENTI TUBOGAS',
         description: '35 mm - Quartz watch - Single-spiral steel curve',
-        price: 'CHF 6,200.00',
+        price: 6200,
         image: imageHomeNew5,
         isNew: false,
         category: 'best-seller',
@@ -70,7 +72,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 6,
         name: 'HYDROCONQUEST',
         description: '42 mm - Automatic watch - Stainless steel and ceramic bezel',
-        price: 'CHF 1,950.00',
+        price: 1950,
         image: imageHomeNew6,
         isNew: true,
         category: 'best-seller',
@@ -79,7 +81,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 7,
         name: 'HYDROCONQUEST',
         description: '42 mm - Quartz watch - Stainless steel',
-        price: 'CHF 1,300.00',
+        price: 1300,
         image: imageHomeNew7,
         isNew: true,
         category: 'best-seller',
@@ -88,7 +90,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 8,
         name: 'LONGINES LEGEND DIVER',
         description: '42 mm - Automatic watch - Stainless steel',
-        price: 'CHF 3,400.00',
+        price: 3400,
         image: imageHomeNew8,
         isNew: true,
         category: 'best-seller',
@@ -97,7 +99,7 @@ const DUMMY_PRODUCTS: Product[] = [
         id: 9,
         name: 'SERPENTI TUBOGAS',
         description: '35 mm - Quartz watch - Single-spiral steel curve',
-        price: 'CHF 6,200.00',
+        price: 6200,
         image: imageHomeNew9,
         isNew: false,
         category: 'best-seller',
@@ -105,6 +107,7 @@ const DUMMY_PRODUCTS: Product[] = [
 ];
 
 export default function ProductShowcase() {
+    const addItem = useAddToCart();
     const [activeTab, setActiveTab] = useState<'new' | 'best-seller'>('new');
     const [scrollProgress, setScrollProgress] = useState<number>(0);
     const [visibleRatio, setVisibleRatio] = useState<number>(1); // Tỉ lệ hiển thị
@@ -199,7 +202,22 @@ export default function ProductShowcase() {
                         <div className="product-card__info">
                             <h3 className="product-card__title">{product.name}</h3>
                             <p className="product-card__description">{product.description}</p>
-                            <span className="product-card__price">{product.price}</span>
+                            <span className="product-card__price">{formatPrice(product.price)}</span>
+                            <button
+                                type="button"
+                                className="product-card__add"
+                                onClick={() =>
+                                    addItem({
+                                        productId: String(product.id),
+                                        name: product.name,
+                                        description: product.description,
+                                        image: product.image,
+                                        price: product.price,
+                                    })
+                                }
+                            >
+                                ADD TO BAG
+                            </button>
                         </div>
                     </div>
                 ))}

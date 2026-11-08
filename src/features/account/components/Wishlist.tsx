@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { MOCK_WISHLIST } from '../utils/wishlistMock';
 import type { WishlistItem } from '../utils/types';
+import { useAddToCart } from '../../cart/useAddToCart.ts';
 
 export const Wishlist: React.FC = () => {
+    const addItem = useAddToCart();
     const [wishlist, setWishlist] = useState<WishlistItem[]>(MOCK_WISHLIST);
 
     const handleRemoveItem = (id: string) => {
@@ -51,6 +53,14 @@ export const Wishlist: React.FC = () => {
                                         type="button"
                                         className="btn-add-to-bag"
                                         disabled={!item.inStock}
+                                        onClick={() =>
+                                            addItem({
+                                                productId: item.productId ?? item.id,
+                                                name: item.productName,
+                                                image: item.image,
+                                                price: item.price,
+                                            })
+                                        }
                                     >
                                         {item.inStock ? 'ADD TO SHOPPING BAG' : 'UNAVAILABLE'}
                                     </button>
