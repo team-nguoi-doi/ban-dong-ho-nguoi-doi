@@ -5,6 +5,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { register as registerUser } from "../authSlice.ts";
 import {useAppDispatch} from "../../../hooks/hooks.ts";
+import BackLink from "./BackLink.tsx";
 
 function Register() {
     const [serverError, setServerError] = useState("");
@@ -28,6 +29,7 @@ function Register() {
 
     return (
         <div className="register">
+            <BackLink corner />
             <form className="register__form" onSubmit={handleSubmit(onSubmit)} noValidate>
                 <h3 className="register__heading">Thành viên đăng ký</h3>
                 <p className="register__desc">
@@ -104,7 +106,9 @@ function Register() {
 
                 <p className="register__footer">
                     Đã có tài khoản?{' '}
-                    <Link to="/login" className="register__link"></Link>
+                    <Link to="/login" className="register__link">
+                        Đăng nhập
+                    </Link>
                 </p>
             </form>
         </div>

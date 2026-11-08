@@ -15,3 +15,9 @@ export interface LoginPayload {
     email: string;
     password: string;
 }
+
+export interface BackLinkProps {
+    to: string;
+    label: string;
+    corner: boolean;
+}

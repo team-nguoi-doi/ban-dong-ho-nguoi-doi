@@ -1379,7 +1379,6 @@
 
 .address-manager .page-title,
 .address-form-page .page-title {
-  font-family: var(--font-serif, 'Georgia', serif);
   font-size: 3.6rem;
   font-weight: 400;
   color: var(--color-text);
@@ -1695,6 +1694,15 @@
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+}
+
+/* css nút logout */
+.header__link--button {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 /* ===== Nút "Thêm vào giỏ" trên card sản phẩm ===== */

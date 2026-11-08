@@ -11,6 +11,7 @@ import CartPage from "./features/cart/components/CartPage.tsx";
 import {useAppDispatch} from "./hooks/hooks.ts";
 import {useEffect} from "react";
 import {initAuth} from "./features/auth/authSlice.ts";
+import {Checkout} from "./features/checkout";
 
 function App() {
 
@@ -34,7 +35,7 @@ function App() {
                     <Route path="wishlist" element={<Wishlist />} />
                   </Route>
 
-
+                  <Route path="/checkout" element={<Checkout />} />
               </Route>
           </Route>
 
