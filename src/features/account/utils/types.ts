@@ -58,3 +58,5 @@ export interface WishlistItem {
     inStock: boolean;
     referenceNumber?: string;
 }
+
+export type PersonalInforType = PersonalInfo;
