@@ -5,7 +5,7 @@ import { Header } from "../features/header";
 export default function MainLayout() {
     return (
         <>
-            <Header isLoggedIn={false} />
+            <Header />
             <main>
                 <Outlet/>
             </main>

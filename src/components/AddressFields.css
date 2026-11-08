@@ -1,0 +1,103 @@
+
+/* Địa chỉ chi tiết */
+.address-fields {
+    --af-line: var(--color-border, #e2e2e2);
+    --af-line-hover: var(--color-border-input, #8c8c8c);
+    --af-text: var(--color-text, #1a1a1a);
+    --af-muted: #8c8c8c;
+    --af-primary: var(--color-primary, #1ac7b6);
+    --af-error: var(--color-error, #d92d4a);
+}
+
+.address-fields__field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+}
+
+.address-fields__label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.address-fields__required {
+    color: var(--af-error);
+}
+
+.address-fields__select,
+.address-fields__input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--af-line);
+    border-radius: 2px;
+    background-color: #fff;
+    color: var(--af-text);
+    font: inherit;
+    font-size: 1.5rem;
+    transition: border-color 0.2s ease;
+}
+
+.address-fields__input::placeholder {
+    color: var(--af-muted);
+}
+
+.address-fields__select:hover:not(:disabled):not(:focus),
+.address-fields__input:hover:not(:focus) {
+    border-color: var(--af-line-hover);
+}
+
+.address-fields__select:focus,
+.address-fields__input:focus {
+    outline: none;
+    border-color: var(--af-primary);
+    box-shadow: 0 0 0 1px var(--af-primary);
+}
+
+/* Ô chọn: bỏ mũi tên mặc định, thay bằng mũi tên mảnh cho hợp phong cách */
+.address-fields__select {
+    appearance: none;
+    padding-right: 40px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%231a1a1a' stroke-width='1.6'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.address-fields__select:disabled {
+    background-color: #f4f4f4;
+    color: var(--af-muted);
+    cursor: not-allowed;
+}
+
+.address-fields__error {
+    margin-top: 6px;
+    font-size: 1.3rem;
+    color: var(--af-error);
+}
+
+.address-fields__retry {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Ô chọn và ô nhập đã đổi màu viền khi focus nên không cần thêm outline; chỉ giữ cho nút "Thử lại" */
+.address-fields button:focus-visible {
+    outline: 2px solid var(--af-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .address-fields__select,
+    .address-fields__input {
+        transition: none;
+    }
+}

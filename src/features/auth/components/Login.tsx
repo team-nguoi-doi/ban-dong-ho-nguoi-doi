@@ -5,6 +5,7 @@ import {type LoginForm, loginVal} from "../utils/validation.ts";
 import {zodResolver} from "@hookform/resolvers/zod";
 import { login as loginUser } from "../authSlice.ts";
 import { useAppDispatch } from "../../../hooks/hooks.ts";
+import BackLink from "./BackLink.tsx";
 
 function Login() {
 
@@ -26,7 +27,9 @@ function Login() {
     }
 
     return (
+
         <div className="login">
+            <BackLink corner />
             <form className="login__form" onSubmit={handleSubmit(onSubmit)} noValidate>
                 <h3 className="login__heading">Đăng nhập</h3>
                 <p className="login__desc">

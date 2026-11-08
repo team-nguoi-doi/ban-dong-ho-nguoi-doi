@@ -1,0 +1,399 @@
+/* Checkout */
+.checkout {
+    --co-bg: var(--color-surface, #ffffff);
+    --co-panel: var(--color-bg, #f4f4f4);
+    --co-text: var(--color-text, #1a1a1a);
+    --co-muted: var(--color-text-secondary, #636d77);
+    --co-line: var(--color-border, #e2e2e2);
+    --co-input-line: var(--color-border-input, #8c8c8c);
+    --co-primary: var(--color-primary, #1ac7b6);
+    --co-primary-hover: var(--color-primary-hover, #17b3a4);
+    --co-on-primary: var(--color-on-primary, #111111);
+
+    background: var(--co-bg);
+    color: var(--co-text);
+    min-height: 100vh;
+    padding: 48px 32px 80px;
+}
+
+.checkout__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.checkout__title {
+    font-size: 2.8rem;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+}
+
+/* ----- Gợi ý đăng nhập, mã ưu đãi ----- */
+.checkout__notices {
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--co-line);
+}
+
+.checkout__notice {
+    font-size: 1.4rem;
+    line-height: 2.6rem;
+    color: var(--co-muted);
+}
+
+.checkout__notice-link {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--co-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.checkout__notice-link:hover {
+    color: var(--co-primary-hover);
+}
+
+.checkout__coupon {
+    display: flex;
+    gap: 12px;
+    max-width: 420px;
+    margin-top: 12px;
+}
+
+.checkout__coupon .checkout__input {
+    flex: 1;
+}
+
+/* ----- Bố cục 2 cột ----- */
+.checkout__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 440px;
+    gap: 64px;
+    align-items: start;
+}
+
+.checkout__heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+}
+
+/* ----- Form bên trái ----- */
+.checkout__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.checkout__field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+}
+
+.checkout__label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.checkout__required {
+    color: #d92d4a;
+}
+
+.checkout__input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--co-line);
+    border-radius: 2px;
+    background: var(--co-bg);
+    color: var(--co-text);
+    font: inherit;
+    font-size: 1.5rem;
+    transition: border-color 0.2s ease;
+}
+
+.checkout__input::placeholder {
+    color: #8c8c8c;
+}
+
+.checkout__input:hover {
+    border-color: var(--co-input-line);
+}
+
+.checkout__input:focus {
+    outline: none;
+    border-color: var(--co-primary);
+    box-shadow: 0 0 0 1px var(--co-primary);
+}
+
+.checkout__input--area {
+    height: auto;
+    padding: 12px 14px;
+    resize: vertical;
+}
+
+.checkout__static {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.checkout__check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+/* Radio và checkbox tự vẽ: trình duyệt tự đổi viền sang màu tối khi màu chủ đạo sáng
+   (accent-color), nên bỏ giao diện gốc và tự định nghĩa màu */
+.checkout__check input,
+.checkout__payment-option input {
+    appearance: none;
+    -webkit-appearance: none;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border: 1px solid var(--co-input-line);
+    background-color: var(--co-bg);
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.checkout__check input:hover,
+.checkout__payment-option input:hover {
+    border-color: var(--co-primary);
+}
+
+/* Radio: viền tròn, chấm giữa màu chủ đạo */
+.checkout__payment-option input[type="radio"] {
+    border-radius: 50%;
+}
+
+.checkout__payment-option input[type="radio"]:checked {
+    border-color: var(--co-primary);
+    background-image: radial-gradient(circle closest-side, var(--co-primary) 0 50%, transparent 55%);
+}
+
+/* Checkbox: nền màu chủ đạo, dấu tích đậm cho dễ đọc */
+.checkout__check input[type="checkbox"] {
+    border-radius: 2px;
+}
+
+.checkout__check input[type="checkbox"]:checked {
+    border-color: var(--co-primary);
+    background-color: var(--co-primary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px 12px;
+}
+
+/* Người dùng bàn phím vẫn thấy khung focus */
+.checkout__check input:focus-visible,
+.checkout__payment-option input:focus-visible {
+    outline: 2px solid var(--co-primary);
+    outline-offset: 2px;
+}
+
+.checkout__ship {
+    padding: 20px 20px 0;
+    margin-bottom: 22px;
+    border-left: 2px solid var(--co-line);
+}
+
+/* ----- Cột phải: đơn hàng ----- */
+.checkout__summary {
+    position: sticky;
+    top: 96px; /* chừa chỗ cho Header cao 72px */
+    padding: 32px 28px;
+    background: var(--co-panel);
+    border: 1px solid var(--co-line);
+}
+
+.checkout__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.4rem;
+}
+
+.checkout__table th,
+.checkout__table td {
+    padding: 14px 0;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--co-line);
+}
+
+.checkout__table thead th {
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--co-text);
+}
+
+.checkout__table tfoot th {
+    font-weight: 600;
+}
+
+.checkout__cell--right {
+    text-align: right !important;
+    white-space: nowrap;
+}
+
+.checkout__item-name {
+    padding-right: 16px !important;
+    color: var(--co-muted);
+}
+
+.checkout__item-qty {
+    color: var(--co-text);
+    font-weight: 600;
+}
+
+.checkout__total th,
+.checkout__total td {
+    font-size: 1.7rem;
+    font-weight: 700;
+    border-bottom: 0;
+}
+
+/* ----- Phương thức thanh toán ----- */
+.checkout__payment {
+    border: 0;
+    margin-top: 24px;
+    min-width: 0;
+}
+
+.checkout__legend {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.checkout__payment-option {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    column-gap: 12px;
+    row-gap: 8px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--co-line);
+    cursor: pointer;
+}
+
+.checkout__payment-label {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.checkout__payment-desc {
+    grid-column: 2;
+    font-size: 1.3rem;
+    line-height: 2rem;
+    color: var(--co-muted);
+}
+
+.checkout__payment-option--active .checkout__payment-label {
+    color: var(--co-text);
+}
+
+/* ----- Nút ----- */
+.checkout__button {
+    height: 46px;
+    padding: 0 24px;
+    border-radius: 2px;
+    font: inherit;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.checkout__button--primary {
+    width: 100%;
+    height: 54px;
+    margin-top: 24px;
+    border: 1px solid var(--co-primary);
+    background: var(--co-primary);
+    color: var(--co-on-primary);
+}
+
+.checkout__button--primary:hover {
+    background: var(--co-primary-hover);
+    border-color: var(--co-primary-hover);
+}
+
+.checkout__button--outline {
+    border: 1px solid var(--co-text);
+    background: transparent;
+    color: var(--co-text);
+}
+
+.checkout__button--outline:hover {
+    background: var(--co-text);
+    color: var(--co-bg);
+}
+
+/* Ô nhập đã đổi màu viền khi focus nên không cần thêm outline; chỉ giữ cho link và nút */
+.checkout a:focus-visible,
+.checkout button:focus-visible {
+    outline: 2px solid var(--co-primary);
+    outline-offset: 2px;
+}
+
+/* ----- Máy tính bảng & điện thoại ----- */
+@media (max-width: 960px) {
+    .checkout {
+        padding: 32px 20px 64px;
+    }
+    .checkout__layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .checkout__summary {
+        position: static;
+    }
+}
+
+@media (max-width: 560px) {
+    .checkout__title {
+        font-size: 2.2rem;
+    }
+    .checkout__row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .checkout__summary {
+        padding: 24px 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .checkout__input,
+    .checkout__button {
+        transition: none;
+    }
+}
+
+/* Khối đang ẩn bằng thuộc tính hidden (ô nhập mã, khung địa chỉ giao khác).
+   Xóa chữ "hidden" trong Checkout.tsx để xem thử giao diện của chúng. */
+.checkout [hidden] {
+    display: none !important;
+}

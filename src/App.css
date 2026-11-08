@@ -1379,7 +1379,6 @@
 
 .address-manager .page-title,
 .address-form-page .page-title {
-  font-family: var(--font-serif, 'Georgia', serif);
   font-size: 3.6rem;
   font-weight: 400;
   color: var(--color-text);
@@ -1697,6 +1696,15 @@
   }
 }
 
+/* css nút logout */
+.header__link--button {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 /* ===== Nút "Thêm vào giỏ" trên card sản phẩm ===== */
 .product-card__add {
   margin-top: 12px;
@@ -1842,20 +1850,6 @@
   .cart-item__image-box { width: 100%; flex-basis: auto; height: 200px; }
 }
 
-
-.product-card__add {
-  margin-top: 12px;
-  padding: 10px 16px;
-  border: 0;
-  border-radius: 2px;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
 .product-card__add:hover { background: var(--color-primary-hover); }
 .product-card__add:active { background: var(--color-primary-active); }
 
@@ -1964,18 +1958,6 @@
 }
 .cart-summary__clear:hover { color: var(--color-error); }
 
-.cart-btn {
-  display: inline-block;
-  padding: 14px 24px;
-  border: 0;
-  border-radius: 2px;
-  font-size: 1.3rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-align: center;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
 .cart-btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
 .cart-btn--primary:hover { background: var(--color-primary-hover); }
 .cart-btn--primary:active { background: var(--color-primary-active); }
