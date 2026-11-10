@@ -1,8 +1,18 @@
 
-import AddressFields from "../../../components/AddressFields.tsx";
+import AddressFields from "../../address/components/AddressFields.tsx";
 import '../css/Checkout.css';
 
+import {EMPTY_ADDRESS} from "../../address/utils/constants.ts";
+import type {AddressValue} from "../../address/utils/types.ts";
+
+import {useState} from "react";
+
 function Checkout() {
+    {/* chỗ này đang gán đỡ là empty address lúc đầu, Hân lấy
+    useState<AddressValue>(user?.address ?? EMPTY_ADDRESS) để lấy địa chỉ mặc định từ tài khoản */}
+    const [billingAddress, setBillingAddress] = useState<AddressValue>(EMPTY_ADDRESS);
+    const [shippingAddress, setShippingAddress] = useState<AddressValue>(EMPTY_ADDRESS)
+
     return (
         <main className="checkout">
             <div className="checkout__inner">
@@ -45,7 +55,7 @@ function Checkout() {
                         </div>
 
                         {/* Địa chỉ chi tiết */}
-                        <AddressFields idPrefix="co-billing" />
+                        <AddressFields idPrefix="co-billing" value={billingAddress} onChange={setBillingAddress} />
 
                         <div className="checkout__field">
                             <label htmlFor="co-phone" className="checkout__label">
@@ -80,7 +90,8 @@ function Checkout() {
                                 </label>
                                 <input id="co-ship-phone" name="shipPhone" type="tel" className="checkout__input" />
                             </div>
-                            <AddressFields idPrefix="co-shipping" />
+
+                            <AddressFields idPrefix="co-shipping" value={shippingAddress} onChange={setShippingAddress} />
                         </div>
 
                         <div className="checkout__field">
