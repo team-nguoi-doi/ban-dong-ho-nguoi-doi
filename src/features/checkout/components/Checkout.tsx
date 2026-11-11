@@ -5,13 +5,26 @@ import '../css/Checkout.css';
 import {EMPTY_ADDRESS} from "../../address/utils/constants.ts";
 import type {AddressValue} from "../../address/utils/types.ts";
 
-import {useState} from "react";
+import {type FormEvent, useState} from "react";
+import {useAppSelector} from "../../../hooks/hooks.ts";
+import {PAYMENT_OPTIONS} from "../utils/constants.ts";
+import type {PaymentMethod} from "../utils/types.ts";
 
 function Checkout() {
     {/* chỗ này đang gán đỡ là empty address lúc đầu, Hân lấy
     useState<AddressValue>(user?.address ?? EMPTY_ADDRESS) để lấy địa chỉ mặc định từ tài khoản */}
     const [billingAddress, setBillingAddress] = useState<AddressValue>(EMPTY_ADDRESS);
-    const [shippingAddress, setShippingAddress] = useState<AddressValue>(EMPTY_ADDRESS)
+    const [shippingAddress, setShippingAddress] = useState<AddressValue>(EMPTY_ADDRESS);
+
+    const { user } = useAppSelector((state) => state.auth);
+
+    const [shipDifferent, setShipDifferent] = useState(false);
+    const [showCoupon, setShowCoupon] = useState(false);
+    const [payment, setPayment] = useState<PaymentMethod>('bank');
+    const handleCoupon = (e: FormEvent) => {
+        e.preventDefault();
+        // todo: kiểm tra mã ưu đãi
+    }
 
     return (
         <main className="checkout">
@@ -22,16 +35,25 @@ function Checkout() {
                 <div className="checkout__notices">
                     <p className="checkout__notice">
                         Bạn có mã ưu đãi?{' '}
-                        <button type="button" className="checkout__notice-link">
+                        <button type="button"
+                                aria-expanded={showCoupon}
+                                onClick={() => setShowCoupon((open) => !open)}
+                                className="checkout__notice-link">
                             Ấn vào đây để nhập mã
                         </button>
                     </p>
 
-                    {/* Đang ẩn: xóa "hidden" để xem ô nhập mã */}
-                    <form className="checkout__coupon" hidden>
-                        <input type="text" name="coupon" className="checkout__input" placeholder="Mã ưu đãi" aria-label="Mã ưu đãi" />
-                        <button type="submit" className="checkout__button checkout__button--outline">Áp dụng</button>
-                    </form>
+                    {showCoupon && (
+                        <form className="checkout__coupon" onSubmit={handleCoupon}>
+                            <input type="text"
+                                   name="coupon"
+                                   className="checkout__input"
+                                   placeholder="Mã ưu đãi"
+                                   aria-label="Mã ưu đãi" />
+                            <button type="submit"
+                                    className="checkout__button checkout__button--outline">Áp dụng</button>
+                        </form>
+                    )}
                 </div>
 
                 <form className="checkout__layout">
@@ -68,31 +90,40 @@ function Checkout() {
                             <label htmlFor="co-email" className="checkout__label">
                                 Địa chỉ email <span className="checkout__required">*</span>
                             </label>
-                            <input id="co-email" name="email" type="email" autoComplete="email" className="checkout__input" />
+                            <input id="co-email"
+                                   name="email"
+                                   type="email"
+                                   autoComplete="email"
+                                   defaultValue={user?.email ?? ''}
+                                   className="checkout__input" />
                         </div>
 
                         <label className="checkout__check">
-                            <input type="checkbox" name="shipDifferent" />
+                            <input type="checkbox"
+                                   checked={shipDifferent}
+                                   onChange={(e) => setShipDifferent(e.target.checked)}
+                                   name="shipDifferent" />
                             <span>Giao đến một địa chỉ khác?</span>
                         </label>
 
-                        {/* Đang ẩn: xóa "hidden" để xem khung địa chỉ giao hàng */}
-                        <div className="checkout__ship" hidden>
-                            <div className="checkout__field">
-                                <label htmlFor="co-ship-name" className="checkout__label">
-                                    Người nhận <span className="checkout__required">*</span>
-                                </label>
-                                <input id="co-ship-name" name="shipName" type="text" className="checkout__input" />
-                            </div>
-                            <div className="checkout__field">
-                                <label htmlFor="co-ship-phone" className="checkout__label">
-                                    Số điện thoại người nhận <span className="checkout__required">*</span>
-                                </label>
-                                <input id="co-ship-phone" name="shipPhone" type="tel" className="checkout__input" />
-                            </div>
+                        {shipDifferent && (
+                            <div className="checkout__ship">
+                                <div className="checkout__field">
+                                    <label htmlFor="co-ship-name" className="checkout__label">
+                                        Người nhận <span className="checkout__required">*</span>
+                                    </label>
+                                    <input id="co-ship-name" name="shipName" type="text" className="checkout__input" />
+                                </div>
+                                <div className="checkout__field">
+                                    <label htmlFor="co-ship-phone" className="checkout__label">
+                                        Số điện thoại người nhận <span className="checkout__required">*</span>
+                                    </label>
+                                    <input id="co-ship-phone" name="shipPhone" type="tel" className="checkout__input" />
+                                </div>
 
-                            <AddressFields idPrefix="co-shipping" value={shippingAddress} onChange={setShippingAddress} />
-                        </div>
+                                <AddressFields idPrefix="co-shipping" value={shippingAddress} onChange={setShippingAddress} />
+                            </div>
+                        )}
 
                         <div className="checkout__field">
                             <label htmlFor="co-note" className="checkout__label">Ghi chú đơn hàng (tùy chọn)</label>
@@ -143,24 +174,21 @@ function Checkout() {
 
                         <fieldset className="checkout__payment">
                             <legend className="checkout__legend">Phương thức thanh toán</legend>
-
-                            <label className="checkout__payment-option checkout__payment-option--active">
-                                <input type="radio" name="payment" value="bank" defaultChecked />
-                                <span className="checkout__payment-label">Chuyển khoản online qua ngân hàng</span>
-                                <span className="checkout__payment-desc">
-                                    Thông tin tài khoản chuyển khoản sẽ hiển thị sau khi bạn bấm “Đặt hàng”. Chúng tôi sẽ liên hệ xác nhận đơn ngay sau đó.
-                                </span>
-                            </label>
-
-                            <label className="checkout__payment-option">
-                                <input type="radio" name="payment" value="cod" />
-                                <span className="checkout__payment-label">Thanh toán khi nhận hàng (COD)</span>
-                            </label>
-
-                            <label className="checkout__payment-option">
-                                <input type="radio" name="payment" value="pickup" />
-                                <span className="checkout__payment-label">Nhận sản phẩm tại cửa hàng</span>
-                            </label>
+                            {PAYMENT_OPTIONS.map((option) => (
+                                <label
+                                    key={option.value}
+                                    className={`checkout__payment-option ${payment === option.value ? 'checkout__payment-option--active' : ''}`}>
+                                    <input type="radio"
+                                           name="payment"
+                                           checked={payment === option.value}
+                                           onChange={() => setPayment(option.value)}
+                                           value={option.value} />
+                                    <span className="checkout__payment-label">{option.label}</span>
+                                    {payment === option.value && (
+                                        <span className="checkout__payment-desc">{option.desc}</span>
+                                    )}
+                                </label>
+                            ))}
                         </fieldset>
 
                         <button type="submit" className="checkout__button checkout__button--primary">
