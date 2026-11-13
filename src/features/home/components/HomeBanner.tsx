@@ -7,13 +7,16 @@ import bannerImage6 from '../../../assets/banner/hero-banner-6.png';
 import bannerImage7 from '../../../assets/banner/hero-banner-7.avif';
 import bannerVideo3 from '../../../assets/banner/hero-banner-video-3.mp4';
 import bannerVideo4 from '../../../assets/banner/hero-banner-video-4.mp4';
+import {Link} from "react-router-dom";
 
 interface BannerItem {
     id: number;
     type: 'video' | 'image';
     src: string;
+    eyebrow?: string;
     title: string;
     subtitle: string;
+    link?: string;
     fitMode?: 'cover' | 'contain';
 }
 
@@ -118,6 +121,22 @@ export default function HomeBanner() {
                 )}
 
                 <div className="hero-banner__overlay" />
+
+                <div className="hero-banner__content">
+                    {currentBanner.eyebrow && (
+                        <span className="hero-banner__eyebrow">
+                            {currentBanner.eyebrow}
+                        </span>
+                    )}
+                    <h1 className="hero-banner__title">{currentBanner.title}</h1>
+                    <p className="hero-banner__subtitle">{currentBanner.subtitle}</p>
+                    <Link
+                        to={currentBanner.link || '/products'}
+                        className="hero-banner__cta"
+                    >
+                        DISCOVER COLLECTION
+                    </Link>
+                </div>
 
                 <button
                     onClick={handlePrev}

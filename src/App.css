@@ -262,8 +262,71 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.72) 0%,
+          rgba(0, 0, 0, 0.22) 55%,
+          rgba(0, 0, 0, 0.05) 100%
+  );
   pointer-events: none;
+}
+
+.hero-banner__content {
+  position: absolute;
+  left: 6%;
+  bottom: 12%;
+  z-index: 5;
+  max-width: 560px;
+  color: var(--color-surface);
+}
+
+.hero-banner__eyebrow {
+  display: block;
+  font-size: 1.15rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.hero-banner__title {
+  font-size: clamp(2.6rem, 4.2vw, 4.4rem);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-surface);
+  margin: 0 0 1rem;
+  line-height: 1.15;
+}
+
+.hero-banner__subtitle {
+  font-size: 1.45rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 2.2rem;
+}
+
+.hero-banner__cta {
+  display: inline-block;
+  padding: 1.2rem 2.8rem;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: 2px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+
+.hero-banner__cta:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.hero-banner__cta:active {
+  background-color: var(--color-primary-active);
 }
 
 .hero-banner__btn {
@@ -326,6 +389,7 @@
   background-color: #ffffff;
   width: 32px;
 }
+
 
 .product-showcase {
   max-width: 1400px;
@@ -458,6 +522,7 @@
   padding-top: 16px;
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 6px;
 }
 
@@ -465,7 +530,13 @@
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.8px;
-  color: #000000;
+  line-height: 1.4;
+  min-height: calc(1.4em * 2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--color-text);
   text-transform: uppercase;
   margin: 0;
 }
@@ -1943,7 +2014,7 @@
 }
 
 .product-card__add {
-  margin-top: 12px;
+  margin-top: auto;
   padding: 10px 16px;
   border: 0;
   border-radius: 2px;
@@ -1955,6 +2026,7 @@
   cursor: pointer;
   transition: background 0.2s ease;
 }
+
 .product-card__add:hover { background: var(--color-primary-hover); }
 .product-card__add:active { background: var(--color-primary-active); }
 

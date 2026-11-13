@@ -300,72 +300,7 @@
     }
   ],
   "carts": [],
-  "wishlist": [
-    {
-      "userId": "Vkuhn0MRUUc",
-      "watchId": 4,
-      "productId": "4",
-      "productName": "LONGINES LEGEND DIVER",
-      "price": 3400,
-      "image": "/src/assets/images/home-new/home-new-4.avif",
-      "inStock": true,
-      "id": "vX_0GbiddVE"
-    },
-    {
-      "userId": "Vkuhn0MRUUc",
-      "watchId": 1,
-      "productId": "1",
-      "productName": "HYDROCONQUEST",
-      "price": 1950,
-      "image": "/src/assets/images/home-new/home-new-1.avif",
-      "inStock": true,
-      "id": "_xEQhqrrZJY"
-    }
-  ],
-  "orders": [
-    {
-      "id": "ORD-101",
-      "userId": "Vkuhn0MRUUc",
-      "createdAt": "2026-11-05T10:30:00Z",
-      "status": "Delivered",
-      "totalAmount": 15500000,
-      "items": [
-        {
-          "id": "item-101-1",
-          "watchId": 1,
-          "productName": "Casio Edifice EFR-539D",
-          "price": 4500000,
-          "quantity": 1,
-          "image": "/images/casio-1.jpg"
-        },
-        {
-          "id": "item-101-2",
-          "watchId": 2,
-          "productName": "Seiko Presage Cocktail Time",
-          "price": 11000000,
-          "quantity": 1,
-          "image": "/images/seiko-1.jpg"
-        }
-      ]
-    },
-    {
-      "id": "ORD-102",
-      "userId": "Vkuhn0MRUUc",
-      "createdAt": "2026-11-07T14:15:00Z",
-      "status": "Processing",
-      "totalAmount": 8200000,
-      "items": [
-        {
-          "id": "item-102-1",
-          "watchId": 3,
-          "productName": "Citizen Eco-Drive Promaster",
-          "price": 8200000,
-          "quantity": 1,
-          "image": "/images/citizen-1.jpg"
-        }
-      ]
-    }
-  ],
-
+  "wishlist": [],
+  "orders": [],
   "$schema": "./node_modules/json-server/schema.json"
 }
