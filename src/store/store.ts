@@ -1,15 +1,20 @@
-import {configureStore} from "@reduxjs/toolkit";
-import authReducer from "../features/auth/authSlice.ts"
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "../features/auth/authSlice.ts";
+import accountReducer from "../features/account/accountSlice.ts";
+import orderReducer from "../features/account/orderSlice.ts";
+import wishlistReducer from "../features/account/wishlistSlice.ts";
 import cartReducer, { saveItems } from "../features/cart/CartSlice.ts";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        account: accountReducer,
+        orders: orderReducer,
+        wishlist: wishlistReducer,
         cart: cartReducer,
     },
 });
 
-// Lưu giỏ hàng vào localStorage mỗi khi nó thay đổi (reload không mất giỏ)
 let prevItems = store.getState().cart.items;
 store.subscribe(() => {
     const items = store.getState().cart.items;
@@ -21,3 +26,4 @@ store.subscribe(() => {
 
 export type RootState = ReturnType<typeof store.getState>;
 export type Dispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch;

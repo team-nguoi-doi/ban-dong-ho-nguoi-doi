@@ -31,6 +31,13 @@ export default function AccountLayout() {
                     </NavLink>
 
                     <NavLink
+                        to="/account/address"
+                        className={({isActive}) => isActive ? "nav-item active" : "nav-item"}
+                    >
+                        My addresses
+                    </NavLink>
+
+                    <NavLink
                         to="/account/orders"
                         className={({isActive}) => isActive ? "nav-item active" : "nav-item"}
                     >

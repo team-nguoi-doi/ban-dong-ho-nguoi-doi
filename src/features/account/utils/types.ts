@@ -52,6 +52,7 @@ export interface Order {
 export interface WishlistItem {
     id: string;
     productId?: string;
+    watchId?: number | string;
     productName: string;
     image: string;
     price: number;

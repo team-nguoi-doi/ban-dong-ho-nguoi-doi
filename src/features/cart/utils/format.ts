@@ -1,5 +1,6 @@
-const formatter = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
-export const formatPrice = (value: number): string => `CHF ${formatter.format(value)}`;
+export const formatPrice = (value: number | undefined | null): string => {
+    if (value === undefined || value === null || isNaN(value)) {
+        return '0đ';
+    }
+    return `${value.toLocaleString('vi-VN')}đ`;
+};

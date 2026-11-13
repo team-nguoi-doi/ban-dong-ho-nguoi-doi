@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import { useAddToCart } from '../../cart/useAddToCart.ts';
 import { formatPrice } from '../../cart/utils/format.ts';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
+import { addToWishlist, removeFromWishlist } from '../../account/wishlistSlice.ts';
 
 import imageHomeNew1 from '../../../assets/images/home-new/home-new-1.avif';
 import imageHomeNew2 from '../../../assets/images/home-new/home-new-2.avif';
@@ -107,10 +109,16 @@ const DUMMY_PRODUCTS: Product[] = [
 ];
 
 export default function ProductShowcase() {
+    const dispatch = useAppDispatch();
     const addItem = useAddToCart();
+
+    // Lấy thông tin user và danh sách wishlist từ Redux
+    const user = useAppSelector((state) => state.auth.user);
+    const wishlistItems = useAppSelector((state) => state.wishlist?.items || []);
+
     const [activeTab, setActiveTab] = useState<'new' | 'best-seller'>('new');
     const [scrollProgress, setScrollProgress] = useState<number>(0);
-    const [visibleRatio, setVisibleRatio] = useState<number>(1); // Tỉ lệ hiển thị
+    const [visibleRatio, setVisibleRatio] = useState<number>(1);
 
     const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -157,8 +165,34 @@ export default function ProductShowcase() {
         }
     };
 
-    const progressWidth = Math.min(100, Math.max(10, visibleRatio * 100));
+    // Xử lý bật/tắt yêu thích (Wishlist toggle)
+    const handleToggleWishlist = (product: Product, e: React.MouseEvent) => {
+        e.stopPropagation();
 
+        if (!user) {
+            alert('Vui lòng đăng nhập để lưu sản phẩm yêu thích!');
+            return;
+        }
+
+        const existingItem = wishlistItems.find(
+            (item) => String(item.watchId || item.productId) === String(product.id)
+        );
+
+        if (existingItem) {
+            dispatch(removeFromWishlist(existingItem.id));
+        } else {
+            dispatch(
+                addToWishlist({
+                    watchId: product.id,
+                    productName: product.name,
+                    price: product.price,
+                    image: product.image,
+                })
+            );
+        }
+    };
+
+    const progressWidth = Math.min(100, Math.max(10, visibleRatio * 100));
     const progressLeft = scrollProgress * (100 - progressWidth);
 
     return (
@@ -187,40 +221,58 @@ export default function ProductShowcase() {
                 onScroll={handleScroll}
                 className="product-showcase__slider-track"
             >
-                {filteredProducts.map((product) => (
-                    <div key={product.id} className="product-card">
-                        <div className="product-card__image-box">
-                            {product.isNew && (
-                                <span className="product-card__badge">New</span>
-                            )}
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                className="product-card__image"
-                            />
+                {filteredProducts.map((product) => {
+                    const existingItem = wishlistItems.find(
+                        (item) => String(item.watchId || item.productId) === String(product.id)
+                    );
+                    const isFavorite = Boolean(existingItem);
+
+                    return (
+                        <div key={product.id} className="product-card">
+                            <div className="product-card__image-box">
+                                {product.isNew && (
+                                    <span className="product-card__badge">New</span>
+                                )}
+
+                                {/* Nút icon trái tim yêu thích */}
+                                <button
+                                    type="button"
+                                    className={`btn-wishlist ${isFavorite ? 'active' : ''}`}
+                                    onClick={(e) => handleToggleWishlist(product, e)}
+                                    title={isFavorite ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}
+                                >
+                                    {isFavorite ? '♥' : '♡'}
+                                </button>
+
+                                <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    className="product-card__image"
+                                />
+                            </div>
+                            <div className="product-card__info">
+                                <h3 className="product-card__title">{product.name}</h3>
+                                <p className="product-card__description">{product.description}</p>
+                                <span className="product-card__price">{formatPrice(product.price)}</span>
+                                <button
+                                    type="button"
+                                    className="product-card__add"
+                                    onClick={() =>
+                                        addItem({
+                                            productId: String(product.id),
+                                            name: product.name,
+                                            description: product.description,
+                                            image: product.image,
+                                            price: product.price,
+                                        })
+                                    }
+                                >
+                                    ADD TO BAG
+                                </button>
+                            </div>
                         </div>
-                        <div className="product-card__info">
-                            <h3 className="product-card__title">{product.name}</h3>
-                            <p className="product-card__description">{product.description}</p>
-                            <span className="product-card__price">{formatPrice(product.price)}</span>
-                            <button
-                                type="button"
-                                className="product-card__add"
-                                onClick={() =>
-                                    addItem({
-                                        productId: String(product.id),
-                                        name: product.name,
-                                        description: product.description,
-                                        image: product.image,
-                                        price: product.price,
-                                    })
-                                }
-                            >
-                                ADD TO BAG
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             <div className="product-showcase__controls">

@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
-import { MOCK_ORDERS } from '../utils/ordersMock';
-import type { Order } from '../utils/types';
+import React, { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
+import { fetchUserOrders } from '../orderSlice.ts';
+import { formatPrice } from '../../cart/utils/format.ts';
 
 type OrderStatusFilter = 'ALL' | 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
 
 export const OrderList: React.FC = () => {
-    const [orders] = useState<Order[]>(MOCK_ORDERS);
+    const dispatch = useAppDispatch();
+
+    const { orders, loading, error } = useAppSelector((state) => state.orders);
     const [activeTab, setActiveTab] = useState<OrderStatusFilter>('ALL');
+
+    useEffect(() => {
+        dispatch(fetchUserOrders());
+    }, [dispatch]);
 
     const filteredOrders = orders.filter((order) => {
         if (activeTab === 'ALL') return true;
         if (activeTab === 'PENDING') return order.status === 'Pending' || order.status === 'Processing';
         return order.status.toUpperCase() === activeTab;
     });
+
+    if (loading) return <div className="order-list-page"><p>Loading your orders...</p></div>;
+    if (error) return <div className="order-list-page"><p className="account__error">{error}</p></div>;
 
     return (
         <div className="order-list-page">
@@ -72,37 +82,44 @@ export const OrderList: React.FC = () => {
                                 <span className={`order-status status-${order.status.toLowerCase()}`}>
                                     {order.status === 'Delivered' && 'Completed'}
                                     {order.status === 'Shipped' && 'On the way'}
-                                    {order.status === 'Processing' && 'Processing'}
+                                    {(order.status === 'Processing' || order.status === 'Pending') && 'Processing'}
                                     {order.status === 'Cancelled' && 'Cancelled'}
                                 </span>
                             </div>
 
                             <div className="order-card__body">
-                                {order.items.map((item) => (
-                                    <div key={item.id} className="order-item">
+                                {order.items.map((item, index) => (
+                                    <div key={item.id || index} className="order-item">
                                         <div className="order-item__img">
-                                            <img src={item.image} alt={item.productName} />
+                                            <img
+                                                src={item.image}
+                                                alt={item.productName}
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src =
+                                                        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200';
+                                                }}
+                                            />
                                         </div>
                                         <div className="order-item__info">
                                             <h4 className="item-title">{item.productName}</h4>
-                                            <p className="item-qty">Qty: {item.quantity}</p>
+                                            <p className="item-qty">x{item.quantity}</p>
                                         </div>
-                                        <div className="item-price">${item.price.toLocaleString()}</div>
+                                        <div className="item-price">{formatPrice(item.price)}</div>
                                     </div>
                                 ))}
                             </div>
 
                             <div className="order-card__footer">
                                 <div className="order-total">
-                                    Total Amount: <span className="total-amount">${order.totalAmount.toLocaleString()}</span>
+                                    Order Total: <span className="total-amount">{formatPrice(order.totalAmount)}</span>
                                 </div>
                                 <div className="order-actions">
                                     {order.status === 'Delivered' && (
-                                        <button type="button" className="btn-primary">
+                                        <button type="button" className="btn-luxury-secondary">
                                             Buy Again
                                         </button>
                                     )}
-                                    <button type="button" className="btn-secondary">
+                                    <button type="button" className="btn-luxury-primary">
                                         View Details
                                     </button>
                                 </div>
