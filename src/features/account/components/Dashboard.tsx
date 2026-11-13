@@ -1,13 +1,20 @@
-import React from 'react';
-import { useAppSelector } from '../../../hooks/hooks.ts';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
 import { Link } from 'react-router-dom';
 import type { PersonalInfo } from '../utils/types.ts';
-import { MOCK_ORDERS } from '../utils/ordersMock';
+import { fetchUserOrders } from '../orderSlice.ts';
 
 export const Dashboard: React.FC = () => {
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user) as PersonalInfo | null;
 
-    const latestOrder = MOCK_ORDERS.length > 0 ? MOCK_ORDERS[0] : null;
+    const { orders } = useAppSelector((state) => state.orders);
+
+    useEffect(() => {
+        dispatch(fetchUserOrders());
+    }, [dispatch]);
+
+    const latestOrder = orders.length > 0 ? orders[0] : null;
 
     const activeAddress = user?.shippingAddress || user?.billingAddress;
     const hasAddress = Boolean(activeAddress);
@@ -15,7 +22,7 @@ export const Dashboard: React.FC = () => {
     return (
         <div className="account-dashboard">
             <div className="dashboard-header">
-                <h1>Hello {user?.fullName }</h1>
+                <h1>Hello {user?.fullName}</h1>
                 <p>
                     In your account you can track your order, change your information or delivery address, and view your saved items.
                 </p>
@@ -28,7 +35,9 @@ export const Dashboard: React.FC = () => {
                         {latestOrder ? (
                             <div className="order-summary">
                                 <p className="order-summary__id">Order #{latestOrder.id}</p>
-                                <p className="order-summary__date">Date: {latestOrder.createdAt}</p>
+                                <p className="order-summary__date">
+                                    Date: {new Date(latestOrder.createdAt).toLocaleDateString('vi-VN')}
+                                </p>
                                 <span className={`status-badge status-${latestOrder.status.toLowerCase()}`}>
                                     {latestOrder.status}
                                 </span>

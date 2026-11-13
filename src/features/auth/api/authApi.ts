@@ -1,12 +1,21 @@
 import type {User, RegisterPayload, LoginPayload} from "../index.ts";
 import axios from "axios"; // axios là thư viện gửi request HTTP, tiện hơn fetch ở chỗ tự chuyển JSON và báo lỗi khi server trả mã lỗi.
+import type { Address } from "../../account/utils/types.ts";
 
 const http = axios.create({baseURL: import.meta.env.VITE_API_URL});
 
 type UserRecord = User & { password: string };
 
-function toUser({id, fullName, email}: UserRecord): User {
-    return { id, fullName, email };
+// function toUser({id, fullName, email}: UserRecord): User {
+//     return { id, fullName, email };
+// }
+
+function toUser(record: UserRecord): User {
+    const { password, ...userWithoutPassword } = record;
+    return {
+        ...userWithoutPassword,
+        addresses: userWithoutPassword.addresses || [],
+    };
 }
 
 export const authApi = {
@@ -31,5 +40,10 @@ export const authApi = {
     async getProfile(id: string) : Promise<User> {
         const { data } = await http.get<UserRecord>(`/users/${id}`);
         return toUser(data);
+    },
+
+    async updateAddresses(userId: string, addresses: Address[]): Promise<Address[]> {
+        const { data } = await http.patch(`/users/${userId}`, { addresses });
+        return data.addresses;
     },
 }

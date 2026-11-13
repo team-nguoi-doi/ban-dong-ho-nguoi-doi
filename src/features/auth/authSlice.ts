@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import type { User, RegisterPayload, LoginPayload } from "./index.ts";
 import { authApi } from './api/authApi.ts';
-import { updateUserProfile, changeEmail } from '../account/accountSlice';
+import { updateUserProfile, changeEmail, updateUserAddresses } from '../account/accountSlice';
 
 const STORAGE_KEY = "user_id";
 
@@ -68,19 +68,39 @@ export const initAuth = createAsyncThunk(
 )
 
 const authSlice = createSlice({
-    initialState,
     name: 'auth',
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(initAuth.fulfilled, (state, action) => {
             state.isInitialized = true;
-            state.user = action.payload;
+            if (action.payload) {
+                const user = action.payload;
+                const addresses = user.addresses || [];
+                const defaultShipping = addresses.find((a) => a.isDefaultShipping) || addresses[0];
+
+                state.user = {
+                    ...user,
+                    addresses,
+                    shippingAddress: user.shippingAddress || defaultShipping,
+                };
+            } else {
+                state.user = null;
+            }
             state.isAuthenticated = action.payload !== null;
-        })
+        });
 
         builder.addCase(login.fulfilled, (state, action) => {
             state.isAuthenticated = true;
-            state.user = action.payload;
+            const user = action.payload;
+            const addresses = user.addresses || [];
+            const defaultShipping = addresses.find((a) => a.isDefaultShipping) || addresses[0];
+
+            state.user = {
+                ...user,
+                addresses,
+                shippingAddress: defaultShipping,
+            };
         });
 
         builder.addCase(logout.fulfilled, (state) => {
@@ -90,16 +110,26 @@ const authSlice = createSlice({
 
         builder.addCase(updateUserProfile.fulfilled, (state, action) => {
             if (state.user) {
-                state.user = {
-                    ...state.user,
-                    ...action.payload,
-                };
+                Object.assign(state.user, action.payload);
             }
         });
 
         builder.addCase(changeEmail.fulfilled, (state, action) => {
             if (state.user) {
                 state.user.email = action.payload.newEmail;
+            }
+        });
+
+        builder.addCase(updateUserAddresses.fulfilled, (state, action) => {
+            if (state.user) {
+                const newAddresses = Array.isArray(action.payload) ? action.payload : [];
+                const defaultShipping = newAddresses.find((addr) => addr.isDefaultShipping) || newAddresses[0];
+
+                state.user = {
+                    ...state.user,
+                    addresses: newAddresses,
+                    shippingAddress: defaultShipping,
+                };
             }
         });
     },

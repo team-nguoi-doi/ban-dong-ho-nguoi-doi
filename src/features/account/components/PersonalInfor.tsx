@@ -4,15 +4,13 @@ import { useForm } from "react-hook-form";
 import { type PersonalInfoForm, personalInfoVal } from "../utils/validation.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Address, PersonalInfo } from "../utils/types.ts";
-import { updateUserProfile } from "../accountSlice.ts";
+import { updateUserProfile, updateUserAddresses } from "../accountSlice.ts";
 import { ChangeEmailCard, ChangeEmailForm } from "./ChangeEmail.tsx";
 import { ChangePasswordCard, ChangePasswordForm } from "./ChangePassword.tsx";
-import { AddressForm } from "./AddressForm.tsx";
+import { AddressForm, type SimpleAddressFormValues } from "./AddressForm.tsx";
 
 export const PersonalInfor: React.FC = () => {
     const [serverError, setServerError] = useState("");
-
-    // 🟢 State quản lý màn hình phụ: 'none' | 'password' | 'email'
     const [subView, setSubView] = useState<'none' | 'password' | 'email'>('none');
 
     const [addressState, setAddressState] = useState<{
@@ -26,8 +24,10 @@ export const PersonalInfor: React.FC = () => {
     const user = useAppSelector((state) => state.auth.user) as PersonalInfo | null;
     const dispatch = useAppDispatch();
 
-    const shippingAddress = user?.shippingAddress;
-    const billingAddress = user?.billingAddress;
+    const shippingAddress =
+        user?.shippingAddress ||
+        user?.addresses?.find((a) => a.isDefaultShipping) ||
+        user?.addresses?.[0];
 
     const {
         register,
@@ -66,28 +66,121 @@ export const PersonalInfor: React.FC = () => {
         }
     };
 
-    const handleSaveAddress = (newAddress: Address, type: 'shipping' | 'billing') => {
-        console.log(`Địa chỉ mới đã tạo cho [${type}]:`, newAddress);
+    const handleSaveAddress = async (
+        formData: SimpleAddressFormValues,
+        type: 'shipping' | 'billing'
+    ) => {
+        const currentAddresses: Address[] = user?.addresses || [];
+        let updatedList: Address[] = [];
+
+        if (formData.id) {
+            updatedList = currentAddresses.map((addr) => {
+                if (addr.id === formData.id) {
+                    return {
+                        ...addr,
+                        fullName: formData.fullName,
+                        phone: formData.phone,
+                        streetAddress: formData.streetAddress,
+                        city: formData.fullCityDistrict || addr.city,
+                        isDefaultShipping: type === 'shipping' ? formData.isDefault : addr.isDefaultShipping,
+                        isDefaultBilling: type === 'billing' ? formData.isDefault : addr.isDefaultBilling,
+                    };
+                }
+                if (formData.isDefault) {
+                    return {
+                        ...addr,
+                        ...(type === 'shipping' ? { isDefaultShipping: false } : { isDefaultBilling: false }),
+                    };
+                }
+                return addr;
+            });
+        } else {
+            const isFirstAddress = currentAddresses.length === 0;
+            const newAddress: Address = {
+                id: `addr_${Date.now()}`,
+                fullName: formData.fullName,
+                phone: formData.phone,
+                streetAddress: formData.streetAddress,
+                city: formData.fullCityDistrict,
+                country: 'Vietnam',
+                isDefaultShipping: isFirstAddress || (type === 'shipping' ? formData.isDefault : false),
+                isDefaultBilling: isFirstAddress || (type === 'billing' ? formData.isDefault : false),
+            };
+
+            updatedList = [...currentAddresses];
+
+            if (formData.isDefault) {
+                updatedList = updatedList.map((addr) => ({
+                    ...addr,
+                    ...(type === 'shipping' ? { isDefaultShipping: false } : { isDefaultBilling: false }),
+                }));
+            }
+
+            updatedList.push(newAddress);
+        }
+
+        try {
+            await dispatch(updateUserAddresses(updatedList)).unwrap();
+            alert(formData.id ? "Đã cập nhật địa chỉ thành công!" : "Đã thêm địa chỉ thành công!");
+            setAddressState((prev) => ({ ...prev, mode: 'none' }));
+        } catch (error: any) {
+            alert(error || "Không thể lưu địa chỉ");
+        }
     };
 
-    // 🟢 Chuyển sang màn hình Đổi Mật Khẩu
+    const handleDeleteAddress = async (addressId: string) => {
+        const currentAddresses: Address[] = user?.addresses || [];
+
+        let updatedList = currentAddresses.filter((addr) => addr.id !== addressId);
+
+        if (updatedList.length > 0) {
+            const hasDefaultShipping = updatedList.some((a) => a.isDefaultShipping);
+            if (!hasDefaultShipping) {
+                updatedList[0] = { ...updatedList[0], isDefaultShipping: true };
+            }
+        }
+
+        try {
+            await dispatch(updateUserAddresses(updatedList)).unwrap();
+            alert("Đã xóa địa chỉ thành công!");
+        } catch (error: any) {
+            alert(error || "Không thể xóa địa chỉ");
+        }
+    };
+
+    const handleSetDefault = async (addressId: string, type: 'shipping' | 'billing') => {
+        const currentAddresses: Address[] = user?.addresses || [];
+        const updatedList = currentAddresses.map((addr) => ({
+            ...addr,
+            isDefaultShipping: type === 'shipping' ? addr.id === addressId : addr.isDefaultShipping,
+            isDefaultBilling: type === 'billing' ? addr.id === addressId : addr.isDefaultBilling,
+        }));
+
+        try {
+            await dispatch(updateUserAddresses(updatedList)).unwrap();
+        } catch (error: any) {
+            alert(error || "Không thể đổi địa chỉ mặc định");
+        }
+    };
+
     if (subView === 'password') {
         return <ChangePasswordForm onBack={() => setSubView('none')} />;
     }
 
-    // 🟢 Chuyển sang màn hình Đổi Email
     if (subView === 'email') {
         return <ChangeEmailForm onBack={() => setSubView('none')} />;
     }
 
-    // 🟢 Chuyển sang màn hình Quản lý Địa chỉ
     if (addressState.mode !== 'none') {
         return (
             <AddressForm
                 addressType={addressState.type}
+                addresses={user?.addresses || []}
                 initialAddingState={addressState.mode === 'add'}
                 onBack={() => setAddressState((prev) => ({ ...prev, mode: 'none' }))}
                 onSaveAddress={handleSaveAddress}
+                onSetDefault={(addrId) => handleSetDefault(addrId, addressState.type)}
+                onDeleteAddress={handleDeleteAddress}
             />
         );
     }
@@ -95,8 +188,10 @@ export const PersonalInfor: React.FC = () => {
     return (
         <div className="personal-infor">
             <h2>My personal information</h2>
-            <p>In this section, you can find and edit your profile and addresses.
-                You can also change your password and email.</p>
+            <p>
+                In this section, you can find and edit your profile and addresses.
+                You can also change your password and email.
+            </p>
 
             <div className="grid-layout">
                 <form className="info-form" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -157,7 +252,6 @@ export const PersonalInfor: React.FC = () => {
                     </button>
                 </form>
 
-                {/* 🟢 Truyền callback mở subView cho 2 Card */}
                 <div className="account-cards-column">
                     <ChangePasswordCard onOpenModal={() => setSubView('password')} />
                     <ChangeEmailCard onOpenModal={() => setSubView('email')} />
@@ -165,75 +259,52 @@ export const PersonalInfor: React.FC = () => {
             </div>
 
             <div className="my-addresses-section">
-                <h3>My addresses</h3>
+                <h3>Addresses, Banks & Cards</h3>
 
                 <div className="addresses-grid">
                     <div className="account-card">
-                        <h4>Shipping address:</h4>
+                        <h4>My addresses</h4>
+
                         {shippingAddress ? (
                             <div className="address-details">
-                                <p><strong>{shippingAddress.fullName}</strong></p>
-                                <p>{shippingAddress.streetAddress}</p>
+                                <p><strong>{shippingAddress.fullName || user?.fullName || 'Full Name'}</strong></p>
+                                <p>{shippingAddress.streetAddress || 'No street address specified'}</p>
                                 {shippingAddress.addressLine2 && <p>{shippingAddress.addressLine2}</p>}
                                 <p>
-                                    {shippingAddress.city}
-                                    {shippingAddress.region ? `, ${shippingAddress.region}` : ''}, {shippingAddress.country}
+                                    {shippingAddress.city || 'City/Province'}, {shippingAddress.country || 'Vietnam'}
                                 </p>
-                                <p>Tel: {shippingAddress.phone}</p>
+                                <p>Tel: {shippingAddress.phone || user?.phone || 'N/A'}</p>
                             </div>
                         ) : (
-                            <p className="card-empty">No shipping address yet</p>
+                            <p className="card-empty">No addresses yet</p>
                         )}
 
                         <div className="address-actions">
                             <button
                                 type="button"
                                 className="btn-link"
-                                onClick={() => setAddressState({ mode: 'select', type: 'shipping' })}
+                                onClick={() =>
+                                    setAddressState({
+                                        mode: user?.addresses && user.addresses.length > 0 ? 'select' : 'add',
+                                        type: 'shipping',
+                                    })
+                                }
                             >
-                                Select a default shipping address
-                            </button>
-                            <button
-                                type="button"
-                                className="btn-link"
-                                onClick={() => setAddressState({ mode: 'add', type: 'shipping' })}
-                            >
-                                Add a shipping address
+                                {shippingAddress ? 'Manage my addresses' : 'Add an address'}
                             </button>
                         </div>
                     </div>
 
                     <div className="account-card">
-                        <h4>Billing address:</h4>
-                        {billingAddress ? (
-                            <div className="address-details">
-                                <p><strong>{billingAddress.fullName}</strong></p>
-                                <p>{billingAddress.streetAddress}</p>
-                                {billingAddress.addressLine2 && <p>{billingAddress.addressLine2}</p>}
-                                <p>
-                                    {billingAddress.city}
-                                    {billingAddress.region ? `, ${billingAddress.region}` : ''}, {billingAddress.country}
-                                </p>
-                                <p>Tel: {billingAddress.phone}</p>
-                            </div>
-                        ) : (
-                            <p className="card-empty">No billing address yet</p>
-                        )}
-
+                        <h4>Banks & Cards</h4>
+                        <p className="card-empty">No saved payment methods yet</p>
                         <div className="address-actions">
                             <button
                                 type="button"
                                 className="btn-link"
-                                onClick={() => setAddressState({ mode: 'select', type: 'billing' })}
+                                onClick={() => alert('Chức năng thêm thẻ/ngân hàng đang phát triển')}
                             >
-                                Select a default billing address
-                            </button>
-                            <button
-                                type="button"
-                                className="btn-link"
-                                onClick={() => setAddressState({ mode: 'add', type: 'billing' })}
-                            >
-                                Add a billing address
+                                Add a bank account or card
                             </button>
                         </div>
                     </div>

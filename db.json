@@ -2,9 +2,12 @@
   "users": [
     {
       "id": "1",
-      "fullName": "Nguyễn Thị Hân Hân",
+      "fullName": "Lê Thị Hân ",
       "email": "hanhan123@gmail.com",
-      "password": "123456"
+      "password": "Hanhanlethi2005@",
+      "title": "Ms.",
+      "phone": "",
+      "dateOfBirth": ""
     },
     {
       "fullName": "Nguyễn Thị Hồng Hạnh",
@@ -25,10 +28,31 @@
       "id": "KFo2hBq2aW8"
     },
     {
-      "fullName": "han",
+      "fullName": "Hana Lee",
       "email": "nhatduydang2008@gmail.com",
       "password": "123456789",
-      "id": "Vkuhn0MRUUc"
+      "id": "Vkuhn0MRUUc",
+      "title": "Ms.",
+      "phone": "",
+      "dateOfBirth": "",
+      "addresses": [
+        {
+          "id": "addr_1794205377941",
+          "fullName": "Hân Lê Thị Hân",
+          "phone": "0912345678",
+          "streetAddress": "12345",
+          "city": "Tỉnh Tuyên Quang, Huyện Na Hang",
+          "country": "Vietnam",
+          "isDefaultShipping": true,
+          "isDefaultBilling": true
+        }
+      ]
+    },
+    {
+      "fullName": "Sức mạnh cơ bắp",
+      "email": "manhdung123@gmail.com",
+      "password": "123456",
+      "id": "9-H4O_de7xA"
     }
   ],
   "brands": [
@@ -43,17 +67,305 @@
   ],
   "watches": [
     {
-      "id": "1",
-      "name": "Casio MTP-1374",
-      "brand": "Casio",
-      "price": 2500000,
-      "gender": "male",
-      "image": "/images/casio-1374.jpg",
-      "description": "Đồng hồ nam dây kim loại",
-      "stock": 20
+      "id": "watch-1",
+      "name": "BVLGARI ALUMINIUM WATCH",
+      "price": 89900000,
+      "isNew": true,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "BVLGARI ALUMINIUM",
+      "caseMaterial": "ALUMINIUM & TITANIUM",
+      "watchShape": "ROUND",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "RUBBER",
+      "caseSize": "LARGE MODEL",
+      "dialColor": "WHITE",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwbe039851/images/images/1260573.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwda072e6d/images/images/worn/1329122.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw21327709/images/images/1260571.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw889f0cba/images/images/1260572.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw4ad29bb8/images/images/worn/1320355.png"
+      ]
+    },
+    {
+      "id": "watch-2",
+      "name": "BVLGARI ALUMINIUM CHRONOGRAPH WATCH",
+      "price": 115000000,
+      "isNew": true,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "BVLGARI ALUMINIUM",
+      "caseMaterial": "ALUMINIUM & TITANIUM",
+      "watchShape": "ROUND",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "RUBBER",
+      "caseSize": "LARGE MODEL",
+      "dialColor": "BLACK",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw600f5759/images/images/1260570.png"
+      ]
+    },
+    {
+      "id": "watch-3",
+      "name": "BVLGARI ALUMINIUM GMT WATCH",
+      "price": 102000000,
+      "isNew": false,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "BVLGARI ALUMINIUM",
+      "caseMaterial": "STEEL",
+      "watchShape": "ROUND",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "RUBBER",
+      "caseSize": "MEDIUM MODEL",
+      "dialColor": "BLUE",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwcf916491/images/images/1679535.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw2fd23d4c/images/images/worn/1713023.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw0520cfd6/images/images/1679542.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw8b05b1cc/images/images/1679544.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw5cc1649e/images/images/1679549.png"
+      ]
+    },
+    {
+      "id": "watch-4",
+      "name": "BVLGARI ALUMINIUM DUCATI SPECIAL EDITION",
+      "price": 136000000,
+      "isNew": false,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "BVLGARI ALUMINIUM",
+      "caseMaterial": "ALUMINIUM & TITANIUM",
+      "watchShape": "ROUND",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "RUBBER",
+      "caseSize": "LARGE MODEL",
+      "dialColor": "RED",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw66bff4c4/images/images/1488363.png"
+      ]
+    },
+    {
+      "id": "watch-5",
+      "name": "SERPENTI TUBOGAS SINGLE SPIRAL WATCH",
+      "price": 183000000,
+      "isNew": true,
+      "availableOnline": true,
+      "gender": "HER",
+      "collection": "SERPENTI",
+      "caseMaterial": "STEEL",
+      "watchShape": "CURVED",
+      "movement": "QUARTZ",
+      "strapMaterial": "METAL",
+      "caseSize": "SMALL MODEL",
+      "dialColor": "SILVER",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwd4cb67a1/images/images/1149131.png"
+      ]
+    },
+    {
+      "id": "watch-6",
+      "name": "SERPENTI TUBOGAS BLACK DIAL WATCH",
+      "price": 183000000,
+      "isNew": true,
+      "availableOnline": true,
+      "gender": "HER",
+      "collection": "SERPENTI",
+      "caseMaterial": "STEEL",
+      "watchShape": "CURVED",
+      "movement": "QUARTZ",
+      "strapMaterial": "METAL",
+      "caseSize": "SMALL MODEL",
+      "dialColor": "BLACK",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw43c1ec1c/images/images/1149124.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw5de38bab/images/images/worn/1653356.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw188b2a21/images/images/1151225.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dweb132209/images/images/562812.png"
+      ]
+    },
+    {
+      "id": "watch-7",
+      "name": "SERPENTI TUBOGAS TWO-TONE ROSE GOLD WATCH",
+      "price": 293000000,
+      "isNew": false,
+      "availableOnline": true,
+      "gender": "HER",
+      "collection": "SERPENTI",
+      "caseMaterial": "ROSE GOLD",
+      "watchShape": "CURVED",
+      "movement": "QUARTZ",
+      "strapMaterial": "METAL",
+      "caseSize": "SMALL MODEL",
+      "dialColor": "SILVER",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwdc7b0693/images/images/1149126.png"
+      ]
+    },
+    {
+      "id": "watch-8",
+      "name": "SERPENTI TUBOGAS DOUBLE SPIRAL WATCH",
+      "price": 325000000,
+      "isNew": false,
+      "availableOnline": true,
+      "gender": "HER",
+      "collection": "SERPENTI",
+      "caseMaterial": "ROSE GOLD",
+      "watchShape": "CURVED",
+      "movement": "QUARTZ",
+      "strapMaterial": "METAL",
+      "caseSize": "MEDIUM MODEL",
+      "dialColor": "BLACK",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw157a2bf5/images/images/1312385.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw32d57010/images/images/worn/1462354.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw41ad4b3e/images/images/1312383.png"
+      ]
+    },
+    {
+      "id": "watch-9",
+      "name": "OCTO FINISSIMO 37 MM AUTOMATIC WATCH",
+      "price": 449000000,
+      "isNew": true,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "OCTO FINISSIMO",
+      "caseMaterial": "STEEL",
+      "watchShape": "OCTAGONAL",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "METAL",
+      "caseSize": "MEDIUM MODEL",
+      "dialColor": "SILVER",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw3ad00aac/images/images/1706542.png"
+      ]
+    },
+    {
+      "id": "watch-10",
+      "name": "OCTO FINISSIMO 37 MM ROSE GOLD WATCH",
+      "price": 430000000,
+      "isNew": false,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "OCTO FINISSIMO",
+      "caseMaterial": "ROSE GOLD",
+      "watchShape": "OCTAGONAL",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "LEATHER",
+      "caseSize": "MEDIUM MODEL",
+      "dialColor": "BLACK",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw99844625/images/images/1701310.png"
+      ]
+    },
+    {
+      "id": "watch-11",
+      "name": "OCTO FINISSIMO ULTRA-THIN STEEL WATCH",
+      "price": 364000000,
+      "isNew": false,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "OCTO FINISSIMO",
+      "caseMaterial": "STEEL",
+      "watchShape": "OCTAGONAL",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "METAL",
+      "caseSize": "EXTRA LARGE MODEL",
+      "dialColor": "GREY",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw3243a0ed/images/images/1359836.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw5c2315eb/images/images/worn/1320351.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw0857f44a/images/images/1359837.png",
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwdc34e381/images/images/1570345.png"
+      ]
+    },
+    {
+      "id": "watch-12",
+      "name": "OCTO FINISSIMO BLUE DIAL WATCH",
+      "price": 364000000,
+      "isNew": false,
+      "availableOnline": true,
+      "gender": "HIM",
+      "collection": "OCTO FINISSIMO",
+      "caseMaterial": "STEEL",
+      "watchShape": "OCTAGONAL",
+      "movement": "AUTOMATIC WINDING",
+      "strapMaterial": "METAL",
+      "caseSize": "EXTRA LARGE MODEL",
+      "dialColor": "BLUE",
+      "images": [
+        "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwd2dd5c70/images/images/1241688.png"
+      ]
     }
   ],
-  "orders": [],
   "carts": [],
+  "wishlist": [
+    {
+      "userId": "Vkuhn0MRUUc",
+      "watchId": 4,
+      "productId": "4",
+      "productName": "LONGINES LEGEND DIVER",
+      "price": 3400,
+      "image": "/src/assets/images/home-new/home-new-4.avif",
+      "inStock": true,
+      "id": "vX_0GbiddVE"
+    },
+    {
+      "userId": "Vkuhn0MRUUc",
+      "watchId": 1,
+      "productId": "1",
+      "productName": "HYDROCONQUEST",
+      "price": 1950,
+      "image": "/src/assets/images/home-new/home-new-1.avif",
+      "inStock": true,
+      "id": "_xEQhqrrZJY"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-101",
+      "userId": "Vkuhn0MRUUc",
+      "createdAt": "2026-11-05T10:30:00Z",
+      "status": "Delivered",
+      "totalAmount": 15500000,
+      "items": [
+        {
+          "id": "item-101-1",
+          "watchId": 1,
+          "productName": "Casio Edifice EFR-539D",
+          "price": 4500000,
+          "quantity": 1,
+          "image": "/images/casio-1.jpg"
+        },
+        {
+          "id": "item-101-2",
+          "watchId": 2,
+          "productName": "Seiko Presage Cocktail Time",
+          "price": 11000000,
+          "quantity": 1,
+          "image": "/images/seiko-1.jpg"
+        }
+      ]
+    },
+    {
+      "id": "ORD-102",
+      "userId": "Vkuhn0MRUUc",
+      "createdAt": "2026-11-07T14:15:00Z",
+      "status": "Processing",
+      "totalAmount": 8200000,
+      "items": [
+        {
+          "id": "item-102-1",
+          "watchId": 3,
+          "productName": "Citizen Eco-Drive Promaster",
+          "price": 8200000,
+          "quantity": 1,
+          "image": "/images/citizen-1.jpg"
+        }
+      ]
+    }
+  ],
+
   "$schema": "./node_modules/json-server/schema.json"
 }

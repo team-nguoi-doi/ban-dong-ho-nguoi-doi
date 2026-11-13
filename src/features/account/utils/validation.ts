@@ -8,30 +8,36 @@ export const personalInfoVal = z.object({
         .max(50, "Họ và tên không vượt quá 50 ký tự"),
     phone: z
         .string()
-        .min(1, "Vui lòng nhập số điện thoại")
+        .optional()
         .refine(
-            (val) => /^(0[3|5|7|8|9][0-9]{8}|\+[1-9]\d{1,14})$/.test(val.trim()),
+            (val) => !val || /^(0[3|5|7|8|9][0-9]{8}|\+[1-9]\d{1,14})$/.test(val.trim()),
             {
                 message: "Số điện thoại không hợp lệ (VD: 0912345678 hoặc +84912345678)",
             }
         ),
+
     dateOfBirth: z
         .string()
-        .min(1, "Vui lòng chọn ngày sinh")
-        .refine((val) => {
-            const birthDate = new Date(val);
-            const today = new Date();
+        .optional()
+        .refine(
+            (val) => {
+                if (!val) return true; // Bỏ trống vẫn hợp lệ
 
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
+                const birthDate = new Date(val);
+                const today = new Date();
+
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                return birthDate < today && age >= 16 && age <= 100;
+            },
+            {
+                message: "Ngày sinh không hợp lệ (Bạn phải từ 16 tuổi trở lên)",
             }
-
-            return birthDate < today && age >= 16 && age <= 100;
-        }, {
-            message: "Ngày sinh không hợp lệ (Bạn phải từ 16 tuổi trở lên)",
-        }),
+        ),
 });
 
 export type PersonalInfoForm = z.infer<typeof personalInfoVal>;

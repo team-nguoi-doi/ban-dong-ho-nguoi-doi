@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PersonalInfoForm, ChangePasswordForm, ChangeEmailForm } from './utils/validation';
-import type { PersonalInfo } from './utils/types';
+import type { Address, PersonalInfo } from './utils/types';
+import { accountApi } from './api/accountApi';
+import type { RootState } from '../../store/store.ts';
 
 interface AccountState {
     profile: PersonalInfo | null;
@@ -17,16 +19,15 @@ const initialState: AccountState = {
 export const updateUserProfile = createAsyncThunk<
     PersonalInfoForm,
     PersonalInfoForm,
-    { rejectValue: string }
+    { state: RootState; rejectValue: string }
 >(
     'account/updateUserProfile',
-    async (form, { rejectWithValue }) => {
+    async (form, { getState, rejectWithValue }) => {
         try {
-            const storedUser = localStorage.getItem('user');
-            const currentUser = storedUser ? JSON.parse(storedUser) : {};
-            const updatedUser = { ...currentUser, ...form };
+            const userId = getState().auth.user?.id;
+            if (!userId) throw new Error("Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn");
 
-            localStorage.setItem('user', JSON.stringify(updatedUser));
+            await accountApi.updateProfile(userId, form);
             return form;
         } catch (error: any) {
             return rejectWithValue(error.message || "Cập nhật thất bại!");
@@ -37,17 +38,15 @@ export const updateUserProfile = createAsyncThunk<
 export const changePassword = createAsyncThunk<
     void,
     ChangePasswordForm,
-    { rejectValue: string }
+    { state: RootState; rejectValue: string }
 >(
     'account/changePassword',
-    async (form, { rejectWithValue }) => {
+    async (form, { getState, rejectWithValue }) => {
         try {
-            const storedUser = localStorage.getItem('user');
-            const currentUser = storedUser ? JSON.parse(storedUser) : {};
+            const userId = getState().auth.user?.id;
+            if (!userId) throw new Error("Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn");
 
-            // Giả lập lưu mật khẩu mới
-            const updatedUser = { ...currentUser, password: form.newPassword };
-            localStorage.setItem('user', JSON.stringify(updatedUser));
+            await accountApi.changePassword(userId, form.newPassword);
         } catch (error: any) {
             return rejectWithValue(error.message || "Đổi mật khẩu thất bại!");
         }
@@ -57,19 +56,37 @@ export const changePassword = createAsyncThunk<
 export const changeEmail = createAsyncThunk<
     ChangeEmailForm,
     ChangeEmailForm,
-    { rejectValue: string }
+    { state: RootState; rejectValue: string }
 >(
     'account/changeEmail',
-    async (form, { rejectWithValue }) => {
+    async (form, { getState, rejectWithValue }) => {
         try {
-            const storedUser = localStorage.getItem('user');
-            const currentUser = storedUser ? JSON.parse(storedUser) : {};
+            const userId = getState().auth.user?.id;
+            if (!userId) throw new Error("Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn");
 
-            const updatedUser = { ...currentUser, email: form.newEmail };
-            localStorage.setItem('user', JSON.stringify(updatedUser));
+            await accountApi.changeEmail(userId, form.newEmail);
             return form;
         } catch (error: any) {
             return rejectWithValue(error.message || "Đổi email thất bại!");
+        }
+    }
+);
+
+export const updateUserAddresses = createAsyncThunk<
+    Address[],
+    Address[],
+    { state: RootState; rejectValue: string }
+>(
+    'account/updateUserAddresses',
+    async (addresses, { getState, rejectWithValue }) => {
+        try {
+            const userId = getState().auth.user?.id;
+            if (!userId) throw new Error("Phiên đăng nhập đã hết hạn");
+
+            await accountApi.updateAddresses(userId, addresses);
+            return addresses;
+        } catch (error: any) {
+            return rejectWithValue(error.message || "Không thể cập nhật địa chỉ!");
         }
     }
 );
@@ -80,6 +97,7 @@ const accountSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            // Update Profile
             .addCase(updateUserProfile.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -94,6 +112,8 @@ const accountSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload || "Cập nhật thất bại";
             })
+
+            // Change Password
             .addCase(changePassword.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -105,6 +125,8 @@ const accountSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload || "Đổi mật khẩu thất bại";
             })
+
+            // Change Email
             .addCase(changeEmail.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -115,6 +137,19 @@ const accountSlice = createSlice({
             .addCase(changeEmail.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || "Đổi email thất bại";
+            })
+
+            // Update Addresses (Đã thêm đầy đủ)
+            .addCase(updateUserAddresses.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateUserAddresses.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(updateUserAddresses.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || "Lưu địa chỉ thất bại";
             });
     },
 });
