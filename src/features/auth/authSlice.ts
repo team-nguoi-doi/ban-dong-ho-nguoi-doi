@@ -67,6 +67,19 @@ export const initAuth = createAsyncThunk(
     }
 )
 
+// action updateProfile
+export const updateProfile = createAsyncThunk<
+    User,
+    { id: string; changes: Partial<Omit<User, 'id'>> },
+    { rejectValue: string }
+>('auth/updateProfile', async ({ id, changes }, { rejectWithValue }) => {
+    try {
+        return await authApi.updateProfile(id, changes)
+    } catch (e) {
+        return rejectWithValue(e instanceof Error ? e.message : 'Không thể cập nhật thông tin')
+    }
+})
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -132,6 +145,10 @@ const authSlice = createSlice({
                 };
             }
         });
+
+        builder.addCase(updateProfile.fulfilled, (state, action) => {
+            state.user = action.payload
+        })
     },
 });
 

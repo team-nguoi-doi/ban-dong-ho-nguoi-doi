@@ -6,24 +6,114 @@ import {EMPTY_ADDRESS} from "../../address/utils/constants.ts";
 import type {AddressValue} from "../../address/utils/types.ts";
 
 import {type FormEvent, useState} from "react";
-import {useAppSelector} from "../../../hooks/hooks.ts";
-import {PAYMENT_OPTIONS} from "../utils/constants.ts";
+import {useAppDispatch, useAppSelector} from "../../../hooks/hooks.ts";
+import {PAYMENT_OPTIONS, SHIPPING_FEE} from "../utils/constants.ts";
 import type {PaymentMethod} from "../utils/types.ts";
+import {formatVND, isBlank, splitFullName} from "../../auth/utils/utils.ts";
+import {useNavigate} from "react-router-dom";
+import type {NewOrder, OrderLine} from "../../orders/utils/types.ts";
+import {placeOrder} from "../../orders/orderSlice.ts";
+import {updateProfile} from "../../auth/authSlice.ts";
 
 function Checkout() {
     {/* chỗ này đang gán đỡ là empty address lúc đầu, Hân lấy
     useState<AddressValue>(user?.address ?? EMPTY_ADDRESS) để lấy địa chỉ mặc định từ tài khoản */}
+
+    const { user } = useAppSelector((state) => state.auth);
+
     const [billingAddress, setBillingAddress] = useState<AddressValue>(EMPTY_ADDRESS);
     const [shippingAddress, setShippingAddress] = useState<AddressValue>(EMPTY_ADDRESS);
 
-    const { user } = useAppSelector((state) => state.auth);
+    const cartItems = useAppSelector((state) => state.cart.items);
+    const items: OrderLine[] = cartItems.map((item) => ({
+        productId: item.productId,
+        productName: item.name,
+        productImage: item.image,
+        productPrice: item.price,
+        quantity: item.quantity,
+    }));
 
     const [shipDifferent, setShipDifferent] = useState(false);
     const [showCoupon, setShowCoupon] = useState(false);
     const [payment, setPayment] = useState<PaymentMethod>('bank');
+
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const { lastName, firstName } = splitFullName(user?.fullName ?? '');
+    const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+
+
+    const subtotal = items.reduce((sum, item) =>
+        sum + item.productPrice * item.quantity, 0);
+    const shipping = payment === 'pickup' ? 0 : SHIPPING_FEE;
+    const total = subtotal + shipping;
+
     const handleCoupon = (e: FormEvent) => {
         e.preventDefault();
         // todo: kiểm tra mã ưu đãi
+    }
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) =>
+    {
+        e.preventDefault();
+        if (!user || submitting) return;
+        if(items.length === 0) {
+            setError('Giỏ hàng đang trống');
+            return;
+        }
+
+        const formData = new FormData(e.currentTarget);
+        const text = (name: string) => String(formData.get(name) ?? '').trim();
+        const customerName = `${text('lastName')} ${text('firstName')}`.trim();
+        const customerPhone = text('phone');
+
+        const missing =
+            isBlank(customerName) ||
+            isBlank(customerPhone) ||
+            isBlank(text('email')) ||
+            isBlank(billingAddress.detail) ||
+            (shipDifferent && (
+                isBlank(text('shipName')) ||
+                isBlank(text('shipPhone')) ||
+                isBlank(shippingAddress.detail)
+            ));
+
+        if(missing) {
+            setError('Vui lòng nhập đầy đủ các trường bắt buộc');
+            return;
+        }
+
+        const order: NewOrder = {
+            userId: user?.id,
+            items: items,
+            subtotal,
+            shippingFee: shipping,
+            total,
+            payment,
+            recipient: shipDifferent
+            ? {name: text('shipName'), phone: text('shipPhone'), address: shippingAddress}
+                : {name: customerName, phone: customerPhone, address: billingAddress},
+            note: text('note'),
+        }
+
+        setSubmitting(true);
+        setError('');
+        try {
+            await dispatch(placeOrder(order)).unwrap();
+
+            if(formData.get('saveDefault') === 'on') {
+                await dispatch(updateProfile({id: user.id, changes: {phone: customerPhone, billingAddress}
+                })).unwrap();
+            }
+
+            navigate('/account/orders');
+        } catch (message) {
+            setError(typeof message === 'string' ? message : 'Không đặt được hàng, vui lòng thử lại');
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     return (
@@ -56,7 +146,7 @@ function Checkout() {
                     )}
                 </div>
 
-                <form className="checkout__layout">
+                <form className="checkout__layout" onSubmit={handleSubmit}>
                     {/* Thông tin thanh toán */}
                     <section className="checkout__billing" aria-labelledby="billing-title">
                         <h2 className="checkout__heading" id="billing-title">Thông tin thanh toán</h2>
@@ -66,13 +156,23 @@ function Checkout() {
                                 <label htmlFor="co-first-name" className="checkout__label">
                                     Tên <span className="checkout__required">*</span>
                                 </label>
-                                <input id="co-first-name" name="firstName" type="text" autoComplete="given-name" className="checkout__input" />
+                                <input id="co-first-name"
+                                       name="firstName"
+                                       type="text"
+                                       autoComplete="given-name"
+                                       defaultValue={firstName}
+                                       className="checkout__input" />
                             </div>
                             <div className="checkout__field">
                                 <label htmlFor="co-last-name" className="checkout__label">
                                     Họ <span className="checkout__required">*</span>
                                 </label>
-                                <input id="co-last-name" name="lastName" type="text" autoComplete="family-name" className="checkout__input" />
+                                <input id="co-last-name"
+                                       name="lastName"
+                                       type="text"
+                                       autoComplete="family-name"
+                                       defaultValue={lastName}
+                                       className="checkout__input" />
                             </div>
                         </div>
 
@@ -83,7 +183,13 @@ function Checkout() {
                             <label htmlFor="co-phone" className="checkout__label">
                                 Số điện thoại <span className="checkout__required">*</span>
                             </label>
-                            <input id="co-phone" name="phone" type="tel" autoComplete="tel" className="checkout__input" />
+                            <input id="co-phone"
+                                   name="phone"
+                                   type="tel"
+                                   autoComplete="tel"
+                                   defaultValue={user?.phone ?? ''}
+                                   pattern="(0|\+84)[0-9]{9}"
+                                   className="checkout__input" />
                         </div>
 
                         <div className="checkout__field">
@@ -149,25 +255,29 @@ function Checkout() {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td className="checkout__item-name">
-                                    Đồng hồ nam Casio MTP-1374 <span className="checkout__item-qty">× 1</span>
-                                </td>
-                                <td className="checkout__cell--right">3.391.000 ₫</td>
-                            </tr>
+                            {items.map((item) => (
+                                <tr key={item.productId}>
+                                    <td className="checkout__item-name">
+                                        {item.productName} <span className="checkout__item-qty">× {item.quantity}</span>
+                                    </td>
+                                    <td className="checkout__cell--right">{formatVND(item.productPrice * item.quantity)}</td>
+                                </tr>
+                            ))}
                             </tbody>
                             <tfoot>
                             <tr>
                                 <th scope="row">Tạm tính</th>
-                                <td className="checkout__cell--right">3.391.000 ₫</td>
+                                <td className="checkout__cell--right">{formatVND(subtotal)}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Vận chuyển</th>
-                                <td className="checkout__cell--right">Đồng giá: 30.000 ₫</td>
+                                <td className="checkout__cell--right">
+                                    {shipping === 0 ? 'Miễn phí' : `Đồng giá: ${formatVND(shipping)}`}
+                                </td>
                             </tr>
                             <tr className="checkout__total">
                                 <th scope="row">Tổng</th>
-                                <td className="checkout__cell--right">3.421.000 ₫</td>
+                                <td className="checkout__cell--right">{formatVND(total)}</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -191,8 +301,12 @@ function Checkout() {
                             ))}
                         </fieldset>
 
-                        <button type="submit" className="checkout__button checkout__button--primary">
-                            Đặt hàng
+                        {error && <p className="checkout__error" role="alert">{error}</p>}
+
+                        <button type="submit"
+                                className="checkout__button checkout__button--primary"
+                                disabled={submitting}>
+                            {submitting ? 'Đang đặt hàng...' : 'Đặt hàng'}
                         </button>
                     </aside>
                 </form>

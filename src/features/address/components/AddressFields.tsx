@@ -101,6 +101,8 @@ function AddressFields({ idPrefix, value, onChange }: AddressFieldsProps) {
                     className="address-fields__input"
                     placeholder="Số nhà, tên đường, thôn/xóm..."
                     autoComplete="street-address"
+                    value={value.detail}
+                    onChange={(e) => onChange({...value, detail: e.target.value})}
                 />
             </div>
         </div>

@@ -2,19 +2,19 @@ import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
 import { Link } from 'react-router-dom';
 import type { PersonalInfo } from '../utils/types.ts';
-import { fetchUserOrders } from '../orderSlice.ts';
+import {fetchUserOrders} from "../../orders/orderSlice.ts";
 
 export const Dashboard: React.FC = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user) as PersonalInfo | null;
 
-    const { orders } = useAppSelector((state) => state.orders);
+    const { items } = useAppSelector((state) => state.orders);
 
     useEffect(() => {
         dispatch(fetchUserOrders());
     }, [dispatch]);
 
-    const latestOrder = orders.length > 0 ? orders[0] : null;
+    const latestOrder = items.length > 0 ? items[0] : null;
 
     const activeAddress = user?.shippingAddress || user?.billingAddress;
     const hasAddress = Boolean(activeAddress);

@@ -6,10 +6,6 @@ const http = axios.create({baseURL: import.meta.env.VITE_API_URL});
 
 type UserRecord = User & { password: string };
 
-// function toUser({id, fullName, email}: UserRecord): User {
-//     return { id, fullName, email };
-// }
-
 function toUser(record: UserRecord): User {
     const { password, ...userWithoutPassword } = record;
     return {
@@ -45,5 +41,11 @@ export const authApi = {
     async updateAddresses(userId: string, addresses: Address[]): Promise<Address[]> {
         const { data } = await http.patch(`/users/${userId}`, { addresses });
         return data.addresses;
+    },
+
+    // updateProfile
+    async updateProfile(id: string, changes: Partial<Omit<User, 'id'>>): Promise<User> {
+        const { data } = await http.patch<UserRecord>(`/users/${id}`, changes); // PATCH của json-server chỉ ghi đè các field phone, billingAddress
+        return toUser(data);   // bỏ password trước khi trả về
     },
 }
