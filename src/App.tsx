@@ -12,6 +12,7 @@ import {useAppDispatch} from "./hooks/hooks.ts";
 import {useEffect} from "react";
 import {initAuth} from "./features/auth/authSlice.ts";
 import {Checkout} from "./features/checkout";
+import ProductListPage from "./pages/ProductListPage.tsx";
 import ProductDetail from "./features/product/components/ProductDetail.tsx";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <Routes>
           <Route element={<MainLayout/>}>
               <Route path="/" element={<HomePage/>} />
+              <Route path="/products" element={<ProductListPage />} />
 
               <Route path="/products/:id" element={<ProductDetail />} />
 
@@ -37,7 +39,6 @@ function App() {
                     <Route path="personal-info" element={<PersonalInfor/>}></Route>
                     <Route path="orders" element={<OrderList />} />
                     <Route path="wishlist" element={<Wishlist />} />
-
 
                   </Route>
 
