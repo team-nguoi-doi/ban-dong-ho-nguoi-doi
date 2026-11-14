@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { fetchUserWishlist, removeFromWishlist } from '../wishlistSlice';
-import { useAddToCart } from '../../cart/useAddToCart.ts';
-import { formatPrice } from '../../cart/utils/format.ts';
+import { useAddToCart, formatPrice } from '../../cart';
 
 export const Wishlist: React.FC = () => {
     const dispatch = useAppDispatch();

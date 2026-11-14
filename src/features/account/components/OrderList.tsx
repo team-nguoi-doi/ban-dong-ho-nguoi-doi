@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
-import { fetchUserOrders } from '../orderSlice.ts';
 import { formatPrice } from '../../cart/utils/format.ts';
+import {fetchUserOrders} from "../../orders/orderSlice.ts";
 
 type OrderStatusFilter = 'ALL' | 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
 
 export const OrderList: React.FC = () => {
     const dispatch = useAppDispatch();
 
-    const { orders, loading, error } = useAppSelector((state) => state.orders);
+    const { items, loading, error } = useAppSelector((state) => state.orders);
     const [activeTab, setActiveTab] = useState<OrderStatusFilter>('ALL');
 
     useEffect(() => {
         dispatch(fetchUserOrders());
     }, [dispatch]);
 
-    const filteredOrders = orders.filter((order) => {
+    const filteredOrders = items.filter((order) => {
         if (activeTab === 'ALL') return true;
         if (activeTab === 'PENDING') return order.status === 'Pending' || order.status === 'Processing';
         return order.status.toUpperCase() === activeTab;
@@ -37,7 +37,7 @@ export const OrderList: React.FC = () => {
                     className={`order-tab ${activeTab === 'ALL' ? 'active' : ''}`}
                     onClick={() => setActiveTab('ALL')}
                 >
-                    All ({orders.length})
+                    All ({items.length})
                 </button>
                 <button
                     type="button"
@@ -89,10 +89,10 @@ export const OrderList: React.FC = () => {
 
                             <div className="order-card__body">
                                 {order.items.map((item, index) => (
-                                    <div key={item.id || index} className="order-item">
+                                    <div key={item.productId || index} className="order-item">
                                         <div className="order-item__img">
                                             <img
-                                                src={item.image}
+                                                src={item.productImage}
                                                 alt={item.productName}
                                                 onError={(e) => {
                                                     (e.target as HTMLImageElement).src =
@@ -104,14 +104,14 @@ export const OrderList: React.FC = () => {
                                             <h4 className="item-title">{item.productName}</h4>
                                             <p className="item-qty">x{item.quantity}</p>
                                         </div>
-                                        <div className="item-price">{formatPrice(item.price)}</div>
+                                        <div className="item-price">{formatPrice(item.productPrice)}</div>
                                     </div>
                                 ))}
                             </div>
 
                             <div className="order-card__footer">
                                 <div className="order-total">
-                                    Order Total: <span className="total-amount">{formatPrice(order.totalAmount)}</span>
+                                    Order Total: <span className="total-amount">{formatPrice(order.total)}</span>
                                 </div>
                                 <div className="order-actions">
                                     {order.status === 'Delivered' && (

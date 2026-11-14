@@ -16,12 +16,6 @@
       "id": "KiUXk1Y_f3Q"
     },
     {
-      "fullName": "Nguyễn Thị Hồng Hạnh",
-      "email": "nguyenthihonghanh456@gmail.com",
-      "password": "123456",
-      "id": "Y8y68-5uG-k"
-    },
-    {
       "fullName": "Lương Thị Hà",
       "email": "haha123@gmail.com",
       "password": "123456",
@@ -47,12 +41,6 @@
           "isDefaultBilling": true
         }
       ]
-    },
-    {
-      "fullName": "Sức mạnh cơ bắp",
-      "email": "manhdung123@gmail.com",
-      "password": "123456",
-      "id": "9-H4O_de7xA"
     }
   ],
   "brands": [
@@ -300,7 +288,133 @@
     }
   ],
   "carts": [],
-  "wishlist": [],
-  "orders": [],
+  "wishlist": [
+    {
+      "userId": "Vkuhn0MRUUc",
+      "watchId": 4,
+      "productId": "4",
+      "productName": "LONGINES LEGEND DIVER",
+      "price": 3400,
+      "image": "/src/assets/images/home-new/home-new-4.avif",
+      "inStock": true,
+      "id": "vX_0GbiddVE"
+    },
+    {
+      "userId": "Vkuhn0MRUUc",
+      "watchId": 1,
+      "productId": "1",
+      "productName": "HYDROCONQUEST",
+      "price": 1950,
+      "image": "/src/assets/images/home-new/home-new-1.avif",
+      "inStock": true,
+      "id": "_xEQhqrrZJY"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-101",
+      "userId": "Vkuhn0MRUUc",
+      "createdAt": "2026-11-05T10:30:00Z",
+      "status": "Delivered",
+      "totalAmount": 15500000,
+      "items": [
+        {
+          "id": "item-101-1",
+          "watchId": 1,
+          "productName": "Casio Edifice EFR-539D",
+          "price": 4500000,
+          "quantity": 1,
+          "image": "/images/casio-1.jpg"
+        },
+        {
+          "id": "item-101-2",
+          "watchId": 2,
+          "productName": "Seiko Presage Cocktail Time",
+          "price": 11000000,
+          "quantity": 1,
+          "image": "/images/seiko-1.jpg"
+        }
+      ]
+    },
+    {
+      "id": "ORD-102",
+      "userId": "Vkuhn0MRUUc",
+      "createdAt": "2026-11-07T14:15:00Z",
+      "status": "Processing",
+      "totalAmount": 8200000,
+      "items": [
+        {
+          "id": "item-102-1",
+          "watchId": 3,
+          "productName": "Citizen Eco-Drive Promaster",
+          "price": 8200000,
+          "quantity": 1,
+          "image": "/images/citizen-1.jpg"
+        }
+      ]
+    },
+    {
+      "userId": "KiUXk1Y_f3Q",
+      "items": [
+        {
+          "productId": 1,
+          "productName": "Đồng hồ nam Casio MTP-1374",
+          "productImage": "",
+          "quantity": 1,
+          "productPrice": 3391000
+        }
+      ],
+      "subtotal": 3391000,
+      "shippingFee": 30000,
+      "total": 3421000,
+      "payment": "bank",
+      "recipient": {
+        "name": "Nguyễn Thị Hồng Hạnh",
+        "phone": "0342689642",
+        "address": {
+          "provinceCode": "24",
+          "provinceName": "Thành phố Bắc Ninh",
+          "wardCode": "7210",
+          "wardName": "Phường Bắc Giang",
+          "detail": "123, abc"
+        }
+      },
+      "note": "",
+      "status": "pending",
+      "createdAt": "2026-11-14T02:53:18.957Z",
+      "id": "ne5vtLAwgxw"
+    },
+    {
+      "userId": "KiUXk1Y_f3Q",
+      "items": [
+        {
+          "productId": 1,
+          "productName": "Đồng hồ nam Casio MTP-1374",
+          "productImage": "",
+          "quantity": 1,
+          "productPrice": 3391000
+        }
+      ],
+      "subtotal": 3391000,
+      "shippingFee": 30000,
+      "total": 3421000,
+      "payment": "cod",
+      "recipient": {
+        "name": "Cường Thịnh",
+        "phone": "0342689642",
+        "address": {
+          "provinceCode": "33",
+          "provinceName": "Tỉnh Hưng Yên",
+          "wardCode": "12916",
+          "wardName": "Xã Bắc Thái Ninh",
+          "detail": "123, abc"
+        }
+      },
+      "note": "",
+      "status": "pending",
+      "createdAt": "2026-11-14T02:54:57.091Z",
+      "id": "E-dTYE5y17I"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

@@ -28,27 +28,6 @@ export interface PersonalInfo {
 
 export type AddressFormValues = Omit<Address, 'id' | 'isDefault'>;
 
-export type OrderStatus = 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-
-export interface OrderItem {
-    id: string;
-    productId?: string;
-    productName: string;
-    image: string;
-    price: number;
-    quantity: number;
-}
-
-export interface Order {
-    id: string;
-    createdAt: string;
-    status: OrderStatus;
-    items: OrderItem[];
-    totalAmount: number;
-    shippingAddress?: Address;
-    paymentMethod?: string;
-}
-
 export interface WishlistItem {
     id: string;
     productId?: string;
@@ -60,4 +39,4 @@ export interface WishlistItem {
     referenceNumber?: string;
 }
 
-export type PersonalInforType = PersonalInfo;
+export type PersonalInfoType = PersonalInfo;
