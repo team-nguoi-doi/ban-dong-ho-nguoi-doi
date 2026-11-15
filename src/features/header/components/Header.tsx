@@ -19,9 +19,11 @@ const POPULAR_SEARCHES = ['Đồng hồ nam', 'Đồng hồ nữ', 'Đồng hồ
 
 function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
     const [searchOpen, setSearchOpen] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false) // menu tài khoản (icon hình người)
     const [keyword, setKeyword] = useState('')
     const [scrolled, setScrolled] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
+    const accountRef = useRef<HTMLDivElement>(null)
 
     // dùng dispatch và lấy state
     const dispatch = useAppDispatch();
@@ -46,6 +48,23 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
         return () => window.removeEventListener('keydown', handleKey)
     }, [searchOpen])
 
+    // Mở menu tài khoản: bấm ra ngoài hoặc nhấn Esc thì đóng
+    useEffect(() => {
+        if (!menuOpen) return
+        const handleClick = (e: MouseEvent) => {
+            if (!accountRef.current?.contains(e.target as Node)) setMenuOpen(false)
+        }
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setMenuOpen(false)
+        }
+        document.addEventListener('mousedown', handleClick)
+        window.addEventListener('keydown', handleKey)
+        return () => {
+            document.removeEventListener('mousedown', handleClick)
+            window.removeEventListener('keydown', handleKey)
+        }
+    }, [menuOpen])
+
     const submitSearch = (value: string) => {
         const text = value.trim()
         if (!text) return
@@ -58,16 +77,18 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
         submitSearch(keyword)
     }
 
-    // Trong suốt chỉ khi: bật transparent, chưa cuộn, chưa mở ô tìm kiếm
-    const overlay = transparent && !scrolled && !searchOpen
+    // Trong suốt chỉ khi: bật transparent, chưa cuộn, chưa mở ô tìm kiếm / menu tài khoản
+    const overlay = transparent && !scrolled && !searchOpen && !menuOpen
 
-    const closeSearch = () => {
+    // Đóng ô tìm kiếm và menu tài khoản (dùng khi chuyển trang)
+    const closeAll = () => {
         setSearchOpen(false);
+        setMenuOpen(false);
     }
 
     // xử lý logout
     function handleLogout() {
-        closeSearch();
+        closeAll();
         dispatch(logout());
     }
 
@@ -76,7 +97,7 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
             <div className="header__main">
                 <div className="header__top">
                     {/* Logo ở góc trái */}
-                    <Link to="/" onClick={closeSearch} className="header__logo" aria-label="Viren Watch - Trang chủ">
+                    <Link to="/" onClick={closeAll} className="header__logo" aria-label="Viren Watch - Trang chủ">
                         <img src={logo} alt="" className="header__logo-img" />
                         <span className="header__logo-text">VIREN WATCH</span>
                     </Link>
@@ -88,49 +109,92 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
                             className="header__icon-btn"
                             aria-label="Tìm kiếm"
                             aria-expanded={searchOpen}
-                            onClick={() => setSearchOpen((open) => !open)}
+                            onClick={() => {
+                                setMenuOpen(false)
+                                setSearchOpen((open) => !open)
+                            }}
                         >
-                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
                                 <circle cx="11" cy="11" r="7" />
                                 <path d="M20 20l-4-4" />
                             </svg>
                         </button>
 
-                        <Link to="/contact" onClick={closeSearch} className="header__icon-btn" aria-label="Liên hệ" title="Liên hệ">
-                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+                        <Link to="/contact" onClick={closeAll} className="header__icon-btn" aria-label="Liên hệ" title="Liên hệ">
+                            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
                                  strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                 <rect x="3" y="5" width="18" height="14" rx="2" />
                                 <path d="M3 7l9 6 9-6" />
                             </svg>
                         </Link>
 
-                        {isInitialized && (isAuthenticated ? (
+                        {isInitialized && isAuthenticated && (
                             <>
-                                <Link to="/account/wishlist" onClick={closeSearch} className="header__icon-btn" aria-label="Yêu thích">
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">
+                                <Link to="/account/wishlist" onClick={closeAll} className="header__icon-btn" aria-label="Yêu thích" title="Yêu thích">
+                                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">
                                         <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
                                     </svg>
                                 </Link>
-                                <Link to="/cart" onClick={closeSearch} className="header__icon-btn" aria-label={`Giỏ hàng, ${cartCount} sản phẩm`}>
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round">
+                                <Link to="/cart" onClick={closeAll} className="header__icon-btn header__icon-btn--cart" aria-label={`Giỏ hàng, ${cartCount} sản phẩm`} title="Giỏ hàng">
+                                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round">
                                         <path d="M5 8h14l-1 12H6L5 8z" />
                                         <path d="M9 8V6a3 3 0 0 1 6 0v2" />
                                     </svg>
                                     {cartCount > 0 && <span className="header__badge">{cartCount}</span>}
                                 </Link>
-                                <Link to="/account" onClick={closeSearch} className="header__link">
-                                    {user?.fullName}
-                                </Link>
-                                <button type="button" className="header__link header__link--button" onClick={handleLogout}>
-                                    Đăng xuất
+                            </>
+                        )}
+
+                        {/* Icon hình người: chứa Đăng nhập / Đăng ký (hoặc tài khoản khi đã đăng nhập) */}
+                        {isInitialized && (
+                            <div className="header__account" ref={accountRef}>
+                                <button
+                                    type="button"
+                                    className={`header__icon-btn ${isAuthenticated ? 'header__icon-btn--user' : ''}`}
+                                    aria-label="Tài khoản"
+                                    aria-haspopup="menu"
+                                    aria-expanded={menuOpen}
+                                    title="Tài khoản"
+                                    onClick={() => {
+                                        setSearchOpen(false)
+                                        setMenuOpen((open) => !open)
+                                    }}
+                                >
+                                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="8" r="4" />
+                                        <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+                                    </svg>
                                 </button>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/register" onClick={closeSearch} className="header__link">Đăng ký</Link>
-                                <Link to="/login" onClick={closeSearch} className="header__link header__link--primary">Đăng nhập</Link>
-                            </>
-                        ))}
+
+                                {menuOpen && (
+                                    <div className="header__menu" role="menu">
+                                        {isAuthenticated ? (
+                                            <>
+                                                <p className="header__menu-hello">Xin chào,</p>
+                                                <p className="header__menu-name">{user?.fullName}</p>
+                                                <Link to="/account" onClick={closeAll} className="header__menu-item" role="menuitem">Tài khoản của tôi</Link>
+                                                <Link to="/account/orders" onClick={closeAll} className="header__menu-item" role="menuitem">Đơn hàng</Link>
+                                                <Link to="/account/wishlist" onClick={closeAll} className="header__menu-item" role="menuitem">Yêu thích</Link>
+                                                <button type="button" className="header__menu-btn header__menu-btn--outline" onClick={handleLogout} role="menuitem">
+                                                    Đăng xuất
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="header__menu-title">Chào mừng đến VIREN WATCH</p>
+                                                <p className="header__menu-desc">Đăng nhập để theo dõi đơn hàng, yêu thích và giỏ hàng của bạn.</p>
+                                                <Link to="/login" onClick={closeAll} className="header__menu-btn header__menu-btn--primary" role="menuitem">
+                                                    Đăng nhập
+                                                </Link>
+                                                <Link to="/register" onClick={closeAll} className="header__menu-btn header__menu-btn--outline" role="menuitem">
+                                                    Đăng ký
+                                                </Link>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </nav>
                 </div>
             </div>
