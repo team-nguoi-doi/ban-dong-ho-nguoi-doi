@@ -1,6 +1,4 @@
-/* ====== Khung header ====== */
 .header {
-    /* Màu mặc định: nền trắng, chữ đen */
     --hd-fg: #111;
     --hd-inv: #fff;
     --hd-bg: #fff;
@@ -11,15 +9,12 @@
     z-index: 100;
 }
 
-/* Khi bật transparent: header nổi đè lên ảnh hero */
 .header--float {
     position: fixed;
     left: 0;
     right: 0;
 }
 
-/* Trạng thái trong suốt: chữ trắng, không nền.
-   Rê chuột vào hoặc focus vào header thì tự về nền trắng. */
 .header--overlay:not(:hover):not(:focus-within) {
     --hd-fg: #fff;
     --hd-inv: #111;
@@ -36,12 +31,10 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Lớp mờ đen nhẹ phía trên để chữ trắng dễ đọc trên ảnh sáng */
 .header--overlay:not(:hover):not(:focus-within) .header__main {
     background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
 }
 
-/* ====== Hàng trên: logo trái, nút phải ====== */
 .header__top {
     height: 84px;
     padding: 0 32px;
@@ -73,7 +66,6 @@
     flex-shrink: 0;
 }
 
-/* ====== Link & nút ====== */
 .header__link {
     font-size: 1.4rem;
     color: var(--hd-fg);
@@ -116,7 +108,6 @@
     background: rgba(29, 191, 175, 0.12);
 }
 
-/* Nút giỏ hàng có màu nổi bật (màu chính của web) */
 .header__icon-btn--cart {
     width: 48px;
     height: 48px;
@@ -138,7 +129,6 @@
     transform: none;
 }
 
-/* Số lượng trên nút giỏ: nền đỏ, viền trắng để nổi trên nền xanh */
 .header__icon-btn--cart .header__badge {
     top: -8px;
     right: -10px;
@@ -163,12 +153,10 @@
     text-align: center;
 }
 
-/* ====== Menu tài khoản (icon hình người) ====== */
 .header__account {
     position: relative;
 }
 
-/* Đã đăng nhập: viền xanh quanh icon người để nhận biết */
 .header__icon-btn--user {
     box-shadow: inset 0 0 0 2px #1ac7b6;
 }
@@ -220,7 +208,6 @@
     word-break: break-word;
 }
 
-/* Nút to: Đăng nhập / Đăng ký / Đăng xuất */
 .header__menu-btn {
     display: flex;
     align-items: center;
@@ -275,108 +262,181 @@
     color: #139e91;
 }
 
-/* ====== Ô tìm kiếm xổ xuống ====== */
-.header__search {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 101;
-    background: #fff;
-    color: #111;
-    padding: 0 32px;
-    max-height: 0;
-    overflow: hidden;
-    visibility: hidden;
-    transition: max-height 0.3s ease, visibility 0.3s;
-}
-
-.header__search--open {
-    max-height: 320px;
-    visibility: visible;
-    border-bottom: 1px solid #e6e6e6;
-}
-
-.header__search-form {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 28px 0 12px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    border-bottom: 1px solid #111;
-}
-
-.header__search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: none;
-    color: #111;
-    font-size: 2.4rem;
-    font-weight: 300;
-    padding: 4px 0;
-}
-
-.header__search-input::placeholder {
-    color: #9a9a9a;
-}
-
-.header__search-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.4rem;
-    color: #111;
-    text-decoration: underline;
-}
-
-.header__suggest {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px 0 32px;
-}
-
-.header__suggest-title {
-    font-size: 1.3rem;
-    color: #636d77;
-    margin-bottom: 12px;
-}
-
-.header__suggest-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 24px;
-}
-
-.header__suggest-item {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: #111;
-    padding: 4px 0;
-}
-
-.header__suggest-item:hover {
-    text-decoration: underline;
-}
-
-.header__overlay {
+.search-panel {
     position: fixed;
     inset: 0;
-    z-index: 99;
-    background: rgba(0, 0, 0, 0.35);
+    z-index: 200;
+    background: #f4f4f4;
+    color: #111;
+    overflow-y: auto;
+    animation: search-panel-in 0.25s ease;
+}
+
+@keyframes search-panel-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.search-panel__close {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #d9d9d9;
+    color: #111;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.search-panel__close:hover {
+    background: #111;
+    color: #fff;
+}
+
+.search-panel__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 32px 48px;
+}
+
+.search-panel__title {
+    text-align: center;
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+.search-panel__form {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 64px;
+}
+
+.search-panel__field {
+    position: relative;
+    flex: 0 1 560px;
+}
+
+.search-panel__input {
+    width: 100%;
+    height: 50px;
+    padding: 0 52px 0 20px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    font-size: 1.6rem;
+    color: #111;
+}
+
+.search-panel__field svg {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.search-panel__submit {
+    width: 112px;
+    height: 50px;
+    background: #111;
+    color: #fff;
+    border: none;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.search-panel__submit:disabled {
+    background: #d9d9d9;
+    cursor: not-allowed;
+}
+
+.search-panel__heading {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.search-panel__heading h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.search-panel__heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #d9d9d9;
+}
+
+.search-panel__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.search-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 32px 16px 20px;
+    background: #ececec;
+    color: #111;
+}
+
+.search-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+.search-card__name {
+    margin-top: 16px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.search-card__price {
+    margin-top: 4px;
+    font-size: 1.3rem;
+    color: #636d77;
+}
+
+.search-card__tag {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    padding: 6px 10px;
+    background: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .header a:focus-visible,
 .header button:focus-visible,
-.header__search-input:focus-visible {
+.search-panel__input:focus-visible {
     outline: 2px solid #1dbfaf;
     outline-offset: 2px;
 }
 
-/* ====== Điện thoại ====== */
+@media (max-width: 900px) {
+    .search-panel__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 720px) {
     .header__top {
         padding: 0 12px;
@@ -397,19 +457,25 @@
         height: 40px;
     }
     .header__logo-text {
-        display: none; /* màn nhỏ chỉ hiện hình tròn */
+        display: none;
     }
-    .header__search {
-        padding: 0 16px;
+    .search-panel__close {
+        top: 12px;
+        right: 12px;
     }
-    .header__search-input {
-        font-size: 1.8rem;
+    .search-panel__inner {
+        padding: 72px 16px 32px;
+    }
+    .search-panel__title {
+        font-size: 2.8rem;
+    }
+    .search-panel__submit {
+        width: 90px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .header__main,
-    .header__search {
+    .header__main {
         transition: none;
     }
 }
