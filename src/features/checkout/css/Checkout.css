@@ -156,6 +156,10 @@
     cursor: pointer;
 }
 
+.checkout__checkbox {
+    margin: 12px 0;
+}
+
 /* Radio và checkbox tự vẽ: trình duyệt tự đổi viền sang màu tối khi màu chủ đạo sáng
    (accent-color), nên bỏ giao diện gốc và tự định nghĩa màu */
 .checkout__check input,
@@ -396,4 +400,22 @@
    Xóa chữ "hidden" trong Checkout.tsx để xem thử giao diện của chúng. */
 .checkout [hidden] {
     display: none !important;
+}
+
+/**/
+/* Thông báo lỗi khi đặt hàng không thành công */
+.checkout__error {
+    margin-top: 20px;
+    padding: 10px 12px;
+    border: 1px solid #d92d4a;
+    border-radius: 2px;
+    background: #fdeef1;
+    color: #d92d4a;
+    font-size: 1.3rem;
+}
+
+/* Nút đang gửi đơn */
+.checkout__button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }

@@ -34,12 +34,12 @@ function App() {
 
               <Route element={<AuthGuard />}>
                   <Route path="/cart" element={<CartPage/>} />
+
                   <Route path="/account" element={<AccountLayout/>}>
                     <Route index element={<Dashboard/>}></Route>
                     <Route path="personal-info" element={<PersonalInfor/>}></Route>
                     <Route path="orders" element={<OrderList />} />
                     <Route path="wishlist" element={<Wishlist />} />
-
                   </Route>
 
                   <Route path="/checkout" element={<Checkout />} />

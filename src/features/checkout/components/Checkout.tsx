@@ -2,18 +2,19 @@
 import AddressFields from "../../address/components/AddressFields.tsx";
 import '../css/Checkout.css';
 
-import {EMPTY_ADDRESS} from "../../address/utils/constants.ts";
 import type {AddressValue} from "../../address/utils/types.ts";
 
-import {type FormEvent, useState} from "react";
+import {type FormEvent, useMemo, useRef, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../../hooks/hooks.ts";
 import {PAYMENT_OPTIONS, SHIPPING_FEE} from "../utils/constants.ts";
 import type {PaymentMethod} from "../utils/types.ts";
 import {formatVND, isBlank, splitFullName} from "../../auth/utils/utils.ts";
-import {useNavigate} from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import type {NewOrder, OrderLine} from "../../orders/utils/types.ts";
 import {placeOrder} from "../../orders/orderSlice.ts";
 import {updateProfile} from "../../auth/authSlice.ts";
+import {getDefaultBilling, getDefaultShipping, toAddress, toAddressValue} from "../../address/utils/convert.ts";
+import {removeSelected, selectCartItems, selectSelectedIds} from "../../cart/CartSlice.ts";
 
 function Checkout() {
     {/* chỗ này đang gán đỡ là empty address lúc đầu, Hân lấy
@@ -21,17 +22,24 @@ function Checkout() {
 
     const { user } = useAppSelector((state) => state.auth);
 
-    const [billingAddress, setBillingAddress] = useState<AddressValue>(EMPTY_ADDRESS);
-    const [shippingAddress, setShippingAddress] = useState<AddressValue>(EMPTY_ADDRESS);
+    const [billingAddress, setBillingAddress] = useState<AddressValue>(() => toAddressValue(getDefaultBilling(user)));
+    const [shippingAddress, setShippingAddress] = useState<AddressValue>(() => toAddressValue(getDefaultShipping(user)));
 
-    const cartItems = useAppSelector((state) => state.cart.items);
-    const items: OrderLine[] = cartItems.map((item) => ({
-        productId: item.productId,
-        productName: item.name,
-        productImage: item.image,
-        productPrice: item.price,
-        quantity: item.quantity,
-    }));
+    const cartItems = useAppSelector(selectCartItems);
+    const selectedIds = useAppSelector(selectSelectedIds);
+    const placedRef = useRef(false);
+
+    const items: OrderLine[] = useMemo(
+        () => cartItems.filter((item) => selectedIds.includes(item.productId))
+            .map((item) => ({
+                productId: item.productId,
+                productName: item.name,
+                productImage: item.image,
+                productPrice: item.price,
+                quantity: item.quantity,
+            })),
+        [cartItems, selectedIds]
+    );
 
     const [shipDifferent, setShipDifferent] = useState(false);
     const [showCoupon, setShowCoupon] = useState(false);
@@ -66,6 +74,7 @@ function Checkout() {
 
         const formData = new FormData(e.currentTarget);
         const text = (name: string) => String(formData.get(name) ?? '').trim();
+
         const customerName = `${text('lastName')} ${text('firstName')}`.trim();
         const customerPhone = text('phone');
 
@@ -73,10 +82,14 @@ function Checkout() {
             isBlank(customerName) ||
             isBlank(customerPhone) ||
             isBlank(text('email')) ||
+            isBlank(billingAddress.provinceCode) ||
+            isBlank(billingAddress.wardCode) ||
             isBlank(billingAddress.detail) ||
             (shipDifferent && (
                 isBlank(text('shipName')) ||
                 isBlank(text('shipPhone')) ||
+                isBlank(shippingAddress.provinceCode) ||
+                isBlank(shippingAddress.wardCode) ||
                 isBlank(shippingAddress.detail)
             ));
 
@@ -102,10 +115,20 @@ function Checkout() {
         setError('');
         try {
             await dispatch(placeOrder(order)).unwrap();
-
+            placedRef.current = true;
+            dispatch(removeSelected());
             if(formData.get('saveDefault') === 'on') {
-                await dispatch(updateProfile({id: user.id, changes: {phone: customerPhone, billingAddress}
-                })).unwrap();
+                try {
+                    await dispatch(updateProfile({
+                        id: user.id,
+                        changes: {
+                            phone: customerPhone,
+                            billingAddress: toAddress(billingAddress, customerName, customerPhone)
+                        }
+                    })).unwrap();
+                } catch {
+                    //
+                }
             }
 
             navigate('/account/orders');
@@ -115,6 +138,8 @@ function Checkout() {
             setSubmitting(false);
         }
     }
+
+    if (items.length === 0 && !placedRef.current) return <Navigate to="/cart" replace />;
 
     return (
         <main className="checkout">
@@ -187,7 +212,7 @@ function Checkout() {
                                    name="phone"
                                    type="tel"
                                    autoComplete="tel"
-                                   defaultValue={user?.phone ?? ''}
+                                   defaultValue={user?.phone || getDefaultBilling(user)?.phone || ''}
                                    pattern="(0|\+84)[0-9]{9}"
                                    className="checkout__input" />
                         </div>
@@ -202,6 +227,13 @@ function Checkout() {
                                    autoComplete="email"
                                    defaultValue={user?.email ?? ''}
                                    className="checkout__input" />
+
+                            <label className="checkout__check checkout__checkbox">
+                                <input type="checkbox"
+                                       name="saveDefault"
+                                       defaultChecked={!getDefaultBilling(user)} />
+                                <span>Lưu làm địa chỉ thanh toán mặc định</span>
+                            </label>
                         </div>
 
                         <label className="checkout__check">

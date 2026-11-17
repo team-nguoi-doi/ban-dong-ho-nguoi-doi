@@ -12,6 +12,10 @@ export interface Address {
     isDefault?: boolean;
     isDefaultShipping?: boolean;
     isDefaultBilling?: boolean;
+
+    // Hạnh thêm field tùy chọn nha Hân
+    provinceCode?: string;
+    wardCode?: string;
 }
 
 export interface PersonalInfo {

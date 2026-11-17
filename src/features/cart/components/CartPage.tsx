@@ -34,7 +34,7 @@ export default function CartPage() {
             return;
         }
         // TODO: chuyển sang trang thanh toán (/checkout) với các sản phẩm đã chọn
-        setNotice('Trang thanh toán sẽ được bổ sung ở bước tiếp theo.');
+        navigate('/checkout');
     };
 
     if (items.length === 0) {
