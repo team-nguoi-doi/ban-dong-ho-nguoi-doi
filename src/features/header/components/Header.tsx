@@ -3,52 +3,53 @@ import type { FormEvent } from 'react'
 import logo from '../../../assets/images/header-logo/viren-logo.png'
 import './Header.css'
 import {useAppDispatch, useAppSelector} from "../../../hooks/hooks.ts";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {logout} from "../../auth/authSlice.ts";
+import {fetchWatches} from "../../products";
+import {formatPrice} from "../../cart/utils/format.ts";
 
 export type Page = 'home' | 'login' | 'register' | 'contact' | 'favorites' | 'cart'
 
 type HeaderProps = {
     cartCount?: number
-    transparent?: boolean // true: trong suốt đè lên ảnh hero (dùng cho trang chủ)
+    transparent?: boolean
     onNavigate?: (page: Page) => void
-    onSearch?: (keyword: string) => void
 }
 
-const POPULAR_SEARCHES = ['Đồng hồ nam', 'Đồng hồ nữ', 'Đồng hồ cơ', 'Dây da', 'Dây kim loại']
-
-function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
+function Header({ cartCount = 0, transparent = false }: HeaderProps) {
     const [searchOpen, setSearchOpen] = useState(false)
-    const [menuOpen, setMenuOpen] = useState(false) // menu tài khoản (icon hình người)
+    const [menuOpen, setMenuOpen] = useState(false)
     const [keyword, setKeyword] = useState('')
     const [scrolled, setScrolled] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
     const accountRef = useRef<HTMLDivElement>(null)
-
-    // dùng dispatch và lấy state
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const { isInitialized, isAuthenticated, user } = useAppSelector((state) => state.auth);
-
-    // Cuộn xuống một chút thì header chuyển sang nền trắng
+    const watches = useAppSelector((state) => state.products.items);
+    const popularWatches = watches.slice(0, 4);
+    useEffect(() => {
+        if (searchOpen && watches.length === 0) dispatch(fetchWatches());
+    }, [searchOpen, watches.length, dispatch]);
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 10)
         handleScroll()
         window.addEventListener('scroll', handleScroll, { passive: true })
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
-
-    // Mở ô tìm kiếm thì tự focus; nhấn Esc thì đóng
     useEffect(() => {
         if (!searchOpen) return
         inputRef.current?.focus()
+        document.body.style.overflow = 'hidden'
         const handleKey = (e: KeyboardEvent) => {
             if (e.key === 'Escape') setSearchOpen(false)
         }
         window.addEventListener('keydown', handleKey)
-        return () => window.removeEventListener('keydown', handleKey)
+        return () => {
+            document.body.style.overflow = ''
+            window.removeEventListener('keydown', handleKey)
+        }
     }, [searchOpen])
-
-    // Mở menu tài khoản: bấm ra ngoài hoặc nhấn Esc thì đóng
     useEffect(() => {
         if (!menuOpen) return
         const handleClick = (e: MouseEvent) => {
@@ -68,25 +69,20 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
     const submitSearch = (value: string) => {
         const text = value.trim()
         if (!text) return
-        onSearch?.(text)
+        navigate(`/products?search=${encodeURIComponent(text)}`)
         setSearchOpen(false)
+        setKeyword('')
     }
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         submitSearch(keyword)
     }
-
-    // Trong suốt chỉ khi: bật transparent, chưa cuộn, chưa mở ô tìm kiếm / menu tài khoản
     const overlay = transparent && !scrolled && !searchOpen && !menuOpen
-
-    // Đóng ô tìm kiếm và menu tài khoản (dùng khi chuyển trang)
     const closeAll = () => {
         setSearchOpen(false);
         setMenuOpen(false);
     }
-
-    // xử lý logout
     function handleLogout() {
         closeAll();
         dispatch(logout());
@@ -96,13 +92,10 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
         <header className={`header ${transparent ? 'header--float' : ''} ${overlay ? 'header--overlay' : ''}`}>
             <div className="header__main">
                 <div className="header__top">
-                    {/* Logo ở góc trái */}
                     <Link to="/" onClick={closeAll} className="header__logo" aria-label="Viren Watch - Trang chủ">
                         <img src={logo} alt="" className="header__logo-img" />
                         <span className="header__logo-text">VIREN WATCH</span>
                     </Link>
-
-                    {/* Các nút bên phải */}
                     <nav className="header__side--right" aria-label="Tài khoản">
                         <button
                             type="button"
@@ -144,8 +137,6 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
                                 </Link>
                             </>
                         )}
-
-                        {/* Icon hình người: chứa Đăng nhập / Đăng ký (hoặc tài khoản khi đã đăng nhập) */}
                         {isInitialized && (
                             <div className="header__account" ref={accountRef}>
                                 <button
@@ -198,39 +189,56 @@ function Header({ cartCount = 0, transparent = false, onSearch }: HeaderProps) {
                     </nav>
                 </div>
             </div>
-
-            {/* Ô tìm kiếm xổ xuống toàn chiều ngang */}
-            <div className={`header__search ${searchOpen ? 'header__search--open' : ''}`} aria-hidden={!searchOpen}>
-                <form className="header__search-form" onSubmit={handleSubmit} role="search">
-                    <input
-                        ref={inputRef}
-                        type="search"
-                        className="header__search-input"
-                        placeholder="Bạn đang tìm mẫu đồng hồ nào?"
-                        value={keyword}
-                        onChange={(e) => setKeyword(e.target.value)}
-                        tabIndex={searchOpen ? 0 : -1}
-                    />
-                    <button type="button" className="header__search-close" onClick={() => setSearchOpen(false)} tabIndex={searchOpen ? 0 : -1}>
-                        Đóng
+            {searchOpen && (
+                <div className="search-panel" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+                    <button type="button" className="search-panel__close" onClick={() => setSearchOpen(false)} aria-label="Đóng tìm kiếm">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                            <path d="M5 5l14 14M19 5L5 19" />
+                        </svg>
                     </button>
-                </form>
 
-                <div className="header__suggest">
-                    <p className="header__suggest-title">Tìm kiếm phổ biến</p>
-                    <ul className="header__suggest-list">
-                        {POPULAR_SEARCHES.map((item) => (
-                            <li key={item}>
-                                <button type="button" className="header__suggest-item" onClick={() => submitSearch(item)} tabIndex={searchOpen ? 0 : -1}>
-                                    {item}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="search-panel__inner">
+                        <h2 className="search-panel__title">Bạn đang tìm gì?</h2>
+
+                        <form className="search-panel__form" onSubmit={handleSubmit} role="search">
+                            <div className="search-panel__field">
+                                <input
+                                    ref={inputRef}
+                                    type="search"
+                                    className="search-panel__input"
+                                    placeholder="Tìm kiếm"
+                                    value={keyword}
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                />
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                                    <circle cx="11" cy="11" r="7" />
+                                    <path d="M20 20l-4-4" />
+                                </svg>
+                            </div>
+                            <button type="submit" className="search-panel__submit" disabled={!keyword.trim()}>
+                                Tìm kiếm
+                            </button>
+                        </form>
+
+                        <div className="search-panel__heading">
+                            <h3>Tìm kiếm phổ biến</h3>
+                        </div>
+
+                        <ul className="search-panel__grid">
+                            {popularWatches.map((w) => (
+                                <li key={w.id}>
+                                    <Link to={`/products/${w.id}`} onClick={closeAll} className="search-card">
+                                        {w.isNew && <span className="search-card__tag">Mới</span>}
+                                        <img src={w.images[0]} alt={w.name} />
+                                        <p className="search-card__name">{w.name}</p>
+                                        <p className="search-card__price">{formatPrice(w.price)}</p>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-
-            {searchOpen && <div className="header__overlay" onClick={() => setSearchOpen(false)} />}
+            )}
         </header>
     )
 }

@@ -33,6 +33,7 @@ export default function ProductListPage() {
                 gender: searchParams.get('gender'),
                 collection: searchParams.get('collection'),
                 isNew: searchParams.get('isNew'),
+                search: searchParams.get('search'),
             })
         );
     }, [dispatch, searchParams]);

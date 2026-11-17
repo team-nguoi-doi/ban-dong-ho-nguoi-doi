@@ -64,14 +64,16 @@ const productSlice = createSlice({
                 gender?: string | null;
                 collection?: string | null;
                 isNew?: string | null;
+                search?: string | null;
             }>
         ) => {
-            const { gender, collection, isNew } = action.payload;
+            const { gender, collection, isNew, search } = action.payload;
             state.filters = {
                 ...initialFilters,
                 gender: gender ? [gender.toUpperCase()] : [],
                 collection: collection ? [collection.toUpperCase()] : [],
                 onlyNew: isNew === 'true',
+                searchQuery: search ?? '',
             };
         },
         resetFilters: (state) => {
