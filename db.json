@@ -495,6 +495,37 @@
       "status": "pending",
       "createdAt": "2026-11-17T14:34:41.382Z",
       "id": "pcwhCctp2ak"
+    },
+    {
+      "userId": "KiUXk1Y_f3Q",
+      "items": [
+        {
+          "productId": "watch-2",
+          "productName": "BVLGARI ALUMINIUM CHRONOGRAPH WATCH",
+          "productImage": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw600f5759/images/images/1260570.png",
+          "productPrice": 115000000,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 115000000,
+      "shippingFee": 30000,
+      "total": 115030000,
+      "payment": "bank",
+      "recipient": {
+        "name": "Nguyễn Thị Hồng Hạnh",
+        "phone": "0899310556",
+        "address": {
+          "provinceCode": "4",
+          "provinceName": "Tỉnh Cao Bằng",
+          "wardCode": "1636",
+          "wardName": "Xã Bế Văn Đàn",
+          "detail": "123, abc"
+        }
+      },
+      "note": "",
+      "status": "Cancelled",
+      "createdAt": "2026-11-17T15:58:47.848Z",
+      "id": "hVIzZDxVzhw"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

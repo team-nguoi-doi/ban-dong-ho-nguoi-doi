@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
-import { formatPrice } from '../../cart/utils/format.ts';
-import {fetchUserOrders} from "../../orders/orderSlice.ts";
+import { formatPrice } from '../../cart';
+import {cancelOrder, fetchUserOrders} from "../../orders/orderSlice.ts";
 
 type OrderStatusFilter = 'ALL' | 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
 
@@ -114,6 +114,12 @@ export const OrderList: React.FC = () => {
                                     Order Total: <span className="total-amount">{formatPrice(order.total)}</span>
                                 </div>
                                 <div className="order-actions">
+                                    {order.status === 'Pending' && (
+                                        <button type="button" className="btn-luxury-secondary"
+                                                onClick={() => dispatch(cancelOrder(order.id))}>
+                                            Cancel Order
+                                        </button>
+                                    )}
                                     {order.status === 'Delivered' && (
                                         <button type="button" className="btn-luxury-secondary">
                                             Buy Again

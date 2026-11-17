@@ -54,7 +54,7 @@ export const fetchUserOrders = createAsyncThunk<
 //
 export const cancelOrder = createAsyncThunk<
     Order,
-    string,
+    string | number,
     { rejectValue: string }
 >(
     'orders/cancelOrder',
@@ -66,6 +66,26 @@ export const cancelOrder = createAsyncThunk<
         }
     }
 );
+
+export const updateOrderStatus = createAsyncThunk<
+    Order,
+    { orderId: string | number; status: OrderStatus },
+    { rejectValue: string }
+>(
+    'orders/updateStatus',
+    async ( { orderId, status }, { rejectWithValue } ) => {
+        try {
+            return await orderApi.updateStatus(orderId, status);
+        } catch (e) {
+            return rejectWithValue(getMessage(e));
+        }
+    }
+);
+
+const replaceOrder = (state: OrderState, updated: Order) => {
+    const index = state.items.findIndex((item) => item.id === updated.id);
+    if (index !== -1) state.items[index] = updated;
+}
 
 const orderSlice = createSlice({
     name: 'orders',
@@ -93,12 +113,14 @@ const orderSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload || 'Lỗi tải đơn hàng';
             })
-            .addCase(cancelOrder.fulfilled, (state, action) => {
-                    const index = state.items.findIndex((o) => o.id === action.payload.id);
-                    if (index !== -1) {
-                        state.items[index] = action.payload;
-                    }
-                });
+            .addCase(cancelOrder.fulfilled, (state, action) => replaceOrder(state, action.payload))
+            .addCase(updateOrderStatus.fulfilled, (state, action) => replaceOrder(state, action.payload))
+            .addCase(cancelOrder.rejected, (state, action) => {
+                state.error = action.payload ?? 'Hủy đơn hàng thất bại';
+            })
+            .addCase(updateOrderStatus.rejected, (state, action) => {
+                state.error = action.payload ?? 'Cập nhật trạng thái thất bại';
+            });
     }
 })
 
