@@ -9,6 +9,7 @@ export interface Watch {
     watchShape?: string;
     movement: string;
     strapMaterial?: string;
+    caseSize?: string;
     dialColor?: string;
     description?: string;
     images: string[];

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { toggleFilterOption, setOnlyNew, resetFilters } from '../productSlice';
 import type { Watch, FilterCategory } from '../utils/types';
@@ -35,6 +36,7 @@ const FILTER_GROUPS: FilterGroupConfig[] = [
 export default function ProductFilter({ watches }: ProductFilterProps) {
     const dispatch = useAppDispatch();
     const filters = useAppSelector((state) => state.products.filters);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [openSections, setOpenSections] = useState<Record<string, boolean>>({
         gender: true,
@@ -48,6 +50,40 @@ export default function ProductFilter({ watches }: ProductFilterProps) {
 
     const toggleSection = (key: string) => {
         setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+    };
+
+    const handleToggleOption = (category: FilterCategory, value: string) => {
+        if (category === 'gender' || category === 'collection') {
+            const isAlreadySelected = filters[category].includes(value);
+            const nextParams = new URLSearchParams(searchParams);
+
+            if (isAlreadySelected) {
+                nextParams.delete(category);
+            } else {
+                nextParams.set(category, value);
+            }
+
+            setSearchParams(nextParams, { replace: true });
+            return;
+        }
+
+        dispatch(toggleFilterOption({ category, value }));
+    };
+
+    const handleToggleOnlyNew = (checked: boolean) => {
+        dispatch(setOnlyNew(checked));
+        const nextParams = new URLSearchParams(searchParams);
+        if (checked) {
+            nextParams.set('isNew', 'true');
+        } else {
+            nextParams.delete('isNew');
+        }
+        setSearchParams(nextParams, { replace: true });
+    };
+
+    const handleClearAll = () => {
+        dispatch(resetFilters());
+        setSearchParams({}, { replace: true });
     };
 
     const dynamicFacets = useMemo(() => {
@@ -91,7 +127,7 @@ export default function ProductFilter({ watches }: ProductFilterProps) {
                     <button
                         type="button"
                         className="product-filter__clear"
-                        onClick={() => dispatch(resetFilters())}
+                        onClick={handleClearAll}
                     >
                         Clear all
                     </button>
@@ -103,7 +139,7 @@ export default function ProductFilter({ watches }: ProductFilterProps) {
                     <input
                         type="checkbox"
                         checked={filters.onlyNew}
-                        onChange={(e) => dispatch(setOnlyNew(e.target.checked))}
+                        onChange={(e) => handleToggleOnlyNew(e.target.checked)}
                     />
                     <span>
                         New Arrivals ({watches.filter((w) => w.isNew).length})
@@ -139,12 +175,7 @@ export default function ProductFilter({ watches }: ProductFilterProps) {
                                             type="checkbox"
                                             checked={filters[key].includes(opt.value)}
                                             onChange={() =>
-                                                dispatch(
-                                                    toggleFilterOption({
-                                                        category: key,
-                                                        value: opt.value,
-                                                    })
-                                                )
+                                                handleToggleOption(key, opt.value)
                                             }
                                         />
                                         <span>

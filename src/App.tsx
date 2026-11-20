@@ -8,20 +8,29 @@ import { AccountLayout, PersonalInfor, OrderList } from "./features/account";
 import {Dashboard} from "./features/account/components/Dashboard.tsx";
 import {Wishlist} from "./features/account/components/Wishlist.tsx";
 import CartPage from "./features/cart/components/CartPage.tsx";
-import {useAppDispatch} from "./hooks/hooks.ts";
+import {useAppDispatch, useAppSelector} from "./hooks/hooks.ts";
 import {useEffect} from "react";
 import {initAuth} from "./features/auth/authSlice.ts";
 import {Checkout} from "./features/checkout";
 import ProductListPage from "./pages/ProductListPage.tsx";
 import ProductDetail from "./features/product/components/ProductDetail.tsx";
+import {AddressPage} from "./features/account/components/AddressPage.tsx";
+import {fetchUserWishlist} from "./features/account/wishlistSlice.ts";
 
 function App() {
 
     const dispatch = useAppDispatch();
+    const user = useAppSelector((state) => state.auth.user);
 
     useEffect(() => {
         dispatch(initAuth());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (user?.id) {
+            dispatch(fetchUserWishlist());
+        }
+    }, [dispatch, user?.id]);
 
   return (
     <>
@@ -38,6 +47,7 @@ function App() {
                   <Route path="/account" element={<AccountLayout/>}>
                     <Route index element={<Dashboard/>}></Route>
                     <Route path="personal-info" element={<PersonalInfor/>}></Route>
+                    <Route path="address" element={<AddressPage />}></Route>
                     <Route path="orders" element={<OrderList />} />
                     <Route path="wishlist" element={<Wishlist />} />
                   </Route>

@@ -1,21 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAddToCart } from '../../cart/useAddToCart.ts';
-import { formatPrice } from '../../cart/utils/format.ts';
+import { useAddToCart } from '../../cart';
+import { formatPrice } from '../../cart';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
 import { addToWishlist, removeFromWishlist } from '../../account/wishlistSlice.ts';
-
-export interface WatchProduct {
-    id: string;
-    name: string;
-    price: number;
-    isNew?: boolean;
-    gender: string;
-    collection: string;
-    caseMaterial: string;
-    movement: string;
-    images: string[];
-}
+import type { Product } from '../../product/util/types.ts';
 
 export default function ProductShowcase() {
     const dispatch = useAppDispatch();
@@ -24,7 +13,7 @@ export default function ProductShowcase() {
     const user = useAppSelector((state) => state.auth.user);
     const wishlistItems = useAppSelector((state) => state.wishlist?.items || []);
 
-    const [products, setProducts] = useState<WatchProduct[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [activeTab, setActiveTab] = useState<'new' | 'best-seller'>('new');
     const [scrollProgress, setScrollProgress] = useState<number>(0);
     const [visibleRatio, setVisibleRatio] = useState<number>(1);
@@ -34,7 +23,7 @@ export default function ProductShowcase() {
     useEffect(() => {
         fetch('http://localhost:3001/watches')
             .then((res) => res.json())
-            .then((data: WatchProduct[]) => {
+            .then((data: Product[]) => {
                 setProducts(data);
                 setTimeout(() => handleScroll(), 100);
             })
@@ -77,7 +66,7 @@ export default function ProductShowcase() {
         }
     };
 
-    const handleToggleWishlist = (product: WatchProduct, e: React.MouseEvent) => {
+    const handleToggleWishlist = (product: Product, e: React.MouseEvent) => {
         e.stopPropagation();
 
         if (!user) {
@@ -88,6 +77,7 @@ export default function ProductShowcase() {
         const existingItem = wishlistItems.find(
             (item) => String(item.watchId || item.productId) === String(product.id)
         );
+        const mainImage = product.images?.[0] || product.image || '';
 
         if (existingItem) {
             dispatch(removeFromWishlist(existingItem.id));
@@ -97,7 +87,7 @@ export default function ProductShowcase() {
                     watchId: product.id,
                     productName: product.name,
                     price: product.price,
-                    image: product.images[0],
+                    image: mainImage,
                 })
             );
         }
@@ -137,7 +127,10 @@ export default function ProductShowcase() {
                         (item) => String(item.watchId || item.productId) === String(product.id)
                     );
                     const isFavorite = Boolean(existingItem);
-                    const description = `${product.movement} - ${product.caseMaterial}`;
+                    const mainImage = product.images?.[0] || product.image || '';
+                    const description = [product.movement, product.caseMaterial]
+                        .filter(Boolean)
+                        .join(' - ');
 
                     return (
                         <div key={product.id} className="product-card">
@@ -151,18 +144,34 @@ export default function ProductShowcase() {
                                     className={`btn-wishlist ${isFavorite ? 'active' : ''}`}
                                     onClick={(e) => handleToggleWishlist(product, e)}
                                     title={isFavorite ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}
+                                    aria-label={isFavorite ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}
                                 >
-                                    {isFavorite ? '♥' : '♡'}
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill={isFavorite ? 'currentColor' : 'none'}
+                                        stroke="currentColor"
+                                        strokeWidth="1.6"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                    </svg>
                                 </button>
 
-                                <img
-                                    src={product.images[0]}
-                                    alt={product.name}
-                                    className="product-card__image"
-                                />
+                                <Link to={`/products/${product.id}`} className="product-card__img-link">
+                                    <img
+                                        src={mainImage}
+                                        alt={product.name}
+                                        className="product-card__image"
+                                    />
+                                </Link>
                             </div>
                             <div className="product-card__info">
-                                <h3 className="product-card__title">{product.name}</h3>
+                                <Link to={`/products/${product.id}`} className="product-card__title-link">
+                                    <h3 className="product-card__title">{product.name}</h3>
+                                </Link>
                                 <p className="product-card__description">{description}</p>
                                 <span className="product-card__price">
                                     {formatPrice(product.price)}
@@ -175,7 +184,7 @@ export default function ProductShowcase() {
                                             productId: product.id,
                                             name: product.name,
                                             description,
-                                            image: product.images[0],
+                                            image: mainImage,
                                             price: product.price,
                                         })
                                     }
