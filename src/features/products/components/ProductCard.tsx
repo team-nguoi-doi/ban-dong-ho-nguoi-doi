@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { Watch } from '../utils/types';
-import { formatPrice } from '../../cart/utils/format';
-import { useAddToCart } from '../../cart/useAddToCart';
+import { formatPrice } from '../../cart';
+import { useAddToCart } from '../../cart';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { addToWishlist, removeFromWishlist } from '../../account/wishlistSlice';
 
@@ -94,8 +94,20 @@ export default function ProductCard({ watch }: ProductCardProps) {
                         className={`bv-card__wishlist ${isFavorite ? 'is-active' : ''}`}
                         onClick={handleToggleWishlist}
                         title={isFavorite ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}
+                        aria-label={isFavorite ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}
                     >
-                        {isFavorite ? '♥' : '♡'}
+                        <svg
+                            width="22"
+                            height="22"
+                            viewBox="0 0 24 24"
+                            fill={isFavorite ? 'currentColor' : 'none'}
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
                     </button>
 
                     {isHovered && watch.images.length > 1 && (
@@ -146,7 +158,11 @@ export default function ProductCard({ watch }: ProductCardProps) {
                         <p className="bv-card__specs">{subtitle}</p>
 
                         <div className="bv-card__actions">
-                            <Link to={`/products/${watch.id}`} className="bv-card__discover">
+                            <Link
+                                to={`/products/${watch.id}`}
+                                className="bv-card__discover"
+                                onClick={(e) => e.stopPropagation()}
+                            >
                                 DISCOVER MORE
                             </Link>
                             <button
