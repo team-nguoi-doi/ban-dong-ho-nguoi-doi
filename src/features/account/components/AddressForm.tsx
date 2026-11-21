@@ -1,24 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Address } from '../utils/types.ts';
-
-export interface Province {
-    code: number;
-    name: string;
-    districts: District[];
-}
-
-export interface District {
-    code: number;
-    name: string;
-}
+import { useProvinces, useWards } from '../../address/useAddressSlice.ts';
 
 export interface SimpleAddressFormValues {
     id?: string;
     fullName: string;
     phone: string;
     provinceCode: string;
-    districtCode: string;
-    fullCityDistrict: string;
+    provinceName: string;
+    wardCode: string;
+    wardName: string;
     streetAddress: string;
     labelAs: 'Home' | 'Work';
     isDefault: boolean;
@@ -28,7 +19,7 @@ interface FormErrors {
     fullName?: string;
     phone?: string;
     provinceCode?: string;
-    districtCode?: string;
+    wardCode?: string;
     streetAddress?: string;
 }
 
@@ -46,8 +37,9 @@ const defaultFormState: SimpleAddressFormValues = {
     fullName: '',
     phone: '',
     provinceCode: '',
-    districtCode: '',
-    fullCityDistrict: '',
+    provinceName: '',
+    wardCode: '',
+    wardName: '',
     streetAddress: '',
     labelAs: 'Home',
     isDefault: false,
@@ -63,42 +55,16 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                                                             onDeleteAddress,
                                                         }) => {
     const isShipping = addressType === 'shipping';
-
-    const [viewMode, setViewMode] = useState<'list' | 'form'>(
-        initialAddingState ? 'form' : 'list'
-    );
-
-    const [provinces, setProvinces] = useState<Province[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [viewMode, setViewMode] = useState<'list' | 'form'>(initialAddingState ? 'form' : 'list');
     const [formData, setFormData] = useState<SimpleAddressFormValues>(defaultFormState);
     const [errors, setErrors] = useState<FormErrors>({});
 
-    useEffect(() => {
-        const fetchLocations = async () => {
-            try {
-                setIsLoading(true);
-                const res = await fetch('https://provinces.open-api.vn/api/?depth=2');
-                const data = await res.json();
-                setProvinces(data);
-            } catch (error) {
-                console.error('Lỗi khi tải danh sách địa chính:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchLocations();
-    }, []);
-
-    const selectedProvince = provinces.find((p) => p.code.toString() === formData.provinceCode);
-    const availableDistricts = selectedProvince ? selectedProvince.districts : [];
+    const provinces = useProvinces();
+    const wards = useWards(formData.provinceCode || null);
 
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};
-
-        if (!formData.fullName.trim()) {
-            newErrors.fullName = 'Vui lòng nhập họ và tên';
-        }
+        if (!formData.fullName.trim()) newErrors.fullName = 'Vui lòng nhập họ và tên';
 
         const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
         if (!formData.phone.trim()) {
@@ -107,13 +73,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             newErrors.phone = 'Số điện thoại không hợp lệ (VD: 0912345678)';
         }
 
-        if (!formData.provinceCode) {
-            newErrors.provinceCode = 'Vui lòng chọn Tỉnh / Thành phố';
-        }
-
-        if (!formData.districtCode) {
-            newErrors.districtCode = 'Vui lòng chọn Quận / Huyện';
-        }
+        if (!formData.provinceCode) newErrors.provinceCode = 'Vui lòng chọn Tỉnh / Thành phố';
+        if (!formData.wardCode) newErrors.wardCode = 'Vui lòng chọn Xã / Phường';
 
         if (!formData.streetAddress.trim()) {
             newErrors.streetAddress = 'Vui lòng nhập địa chỉ cụ thể (Số nhà, tên đường)';
@@ -127,25 +88,26 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
     const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const provCode = e.target.value;
+        const provObj = provinces.options.find((p) => p.code === provCode);
         setFormData((prev) => ({
             ...prev,
             provinceCode: provCode,
-            districtCode: '',
-            fullCityDistrict: '',
+            provinceName: provObj?.label ?? '',
+            wardCode: '',
+            wardName: '',
         }));
         if (errors.provinceCode) setErrors((prev) => ({ ...prev, provinceCode: undefined }));
     };
 
-    const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const distCode = e.target.value;
-        const distObj = availableDistricts.find((d) => d.code.toString() === distCode);
-
+    const handleWardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const wardCode = e.target.value;
+        const wardObj = wards.options.find((w) => w.code === wardCode);
         setFormData((prev) => ({
             ...prev,
-            districtCode: distCode,
-            fullCityDistrict: selectedProvince && distObj ? `${selectedProvince.name}, ${distObj.name}` : '',
+            wardCode,
+            wardName: wardObj?.label ?? '',
         }));
-        if (errors.districtCode) setErrors((prev) => ({ ...prev, districtCode: undefined }));
+        if (errors.wardCode) setErrors((prev) => ({ ...prev, wardCode: undefined }));
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,14 +123,14 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
     const handleEditClick = (addr: Address) => {
         const isCurrentDefault = isShipping ? addr.isDefaultShipping : addr.isDefaultBilling;
-
         setFormData({
             id: addr.id,
             fullName: addr.fullName,
             phone: addr.phone,
-            provinceCode: '',
-            districtCode: '',
-            fullCityDistrict: addr.city || '',
+            provinceCode: addr.provinceCode || '',
+            provinceName: addr.city || '',
+            wardCode: addr.wardCode || '',
+            wardName: addr.region || '',
             streetAddress: addr.streetAddress || '',
             labelAs: 'Home',
             isDefault: !!isCurrentDefault,
@@ -219,13 +181,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
                     {addresses.map((addr) => {
                         const isCurrentDefault = isShipping ? addr.isDefaultShipping : addr.isDefaultBilling;
-
                         return (
                             <div key={addr.id} className={`account-card ${isCurrentDefault ? 'default-card' : ''}`}>
                                 {isCurrentDefault && <span className="badge-default">Default</span>}
                                 <h4>{addr.fullName}</h4>
                                 <p>{addr.streetAddress || 'Chưa nhập số nhà'}</p>
-                                <p>{addr.city}, {addr.country}</p>
+                                <p>{[addr.region, addr.city, addr.country].filter(Boolean).join(', ')}</p>
                                 <p>Tel: {addr.phone}</p>
 
                                 <div className="address-card__actions">
@@ -240,7 +201,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                                             </button>
                                         )}
                                     </div>
-
                                     <div className="address-card__actions-right">
                                         <button
                                             type="button"
@@ -249,7 +209,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                                         >
                                             Edit
                                         </button>
-
                                         {onDeleteAddress && (
                                             <button
                                                 type="button"
@@ -326,15 +285,15 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                             name="provinceCode"
                             value={formData.provinceCode}
                             onChange={handleProvinceChange}
-                            disabled={isLoading}
+                            disabled={provinces.loading}
                             className={errors.provinceCode ? 'input-error' : ''}
                         >
                             <option value="" disabled hidden>
-                                {isLoading ? 'Loading cities...' : 'City / Province *'}
+                                {provinces.loading ? 'Loading cities...' : 'City / Province *'}
                             </option>
-                            {provinces.map((province) => (
+                            {provinces.options.map((province) => (
                                 <option key={province.code} value={province.code}>
-                                    {province.name}
+                                    {province.label}
                                 </option>
                             ))}
                         </select>
@@ -343,22 +302,26 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
                     <div className="form-group">
                         <select
-                            name="districtCode"
-                            value={formData.districtCode}
-                            onChange={handleDistrictChange}
-                            disabled={!formData.provinceCode || isLoading}
-                            className={errors.districtCode ? 'input-error' : ''}
+                            name="wardCode"
+                            value={formData.wardCode}
+                            onChange={handleWardChange}
+                            disabled={!formData.provinceCode || wards.loading}
+                            className={errors.wardCode ? 'input-error' : ''}
                         >
                             <option value="" disabled hidden>
-                                {formData.provinceCode ? 'District *' : 'Select City first'}
+                                {!formData.provinceCode
+                                    ? 'Select City first'
+                                    : wards.loading
+                                        ? 'Loading wards...'
+                                        : 'Ward / Commune *'}
                             </option>
-                            {availableDistricts.map((district) => (
-                                <option key={district.code} value={district.code}>
-                                    {district.name}
+                            {wards.options.map((ward) => (
+                                <option key={ward.code} value={ward.code}>
+                                    {ward.label}
                                 </option>
                             ))}
                         </select>
-                        {errors.districtCode && <p className="field-error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.districtCode}</p>}
+                        {errors.wardCode && <p className="field-error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.wardCode}</p>}
                     </div>
                 </div>
 

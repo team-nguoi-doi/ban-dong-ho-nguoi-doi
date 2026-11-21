@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAddToCart } from '../../cart/useAddToCart.ts';
-import { formatPrice } from '../../cart/utils/format.ts';
+import { useAddToCart } from '../../cart';
+import { formatPrice } from '../../cart';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
 import { addToWishlist, removeFromWishlist } from '../../account/wishlistSlice.ts';
-import type { WatchProduct } from './ProductShowcase.tsx';
+import type { Watch } from '../../products';
 
 const COLLECTIONS = ['SERPENTI', 'OCTO FINISSIMO', 'BVLGARI ALUMINIUM'] as const;
 
@@ -16,18 +16,18 @@ export default function CollectionShowcase() {
     const wishlistItems = useAppSelector((state) => state.wishlist?.items || []);
 
     const [activeCol, setActiveCol] = useState<string>('SERPENTI');
-    const [products, setProducts] = useState<WatchProduct[]>([]);
+    const [products, setProducts] = useState<Watch[]>([]);
 
     useEffect(() => {
         fetch('http://localhost:3001/watches')
             .then((res) => res.json())
-            .then((data: WatchProduct[]) => setProducts(data))
+            .then((data: Watch[]) => setProducts(data))
             .catch((err) => console.error('Lỗi tải bộ sưu tập:', err));
     }, []);
 
     const filtered = products.filter((item) => item.collection === activeCol);
 
-    const handleToggleWishlist = (product: WatchProduct, e: React.MouseEvent) => {
+    const handleToggleWishlist = (product: Watch, e: React.MouseEvent) => {
         e.stopPropagation();
         if (!user) {
             alert('Vui lòng đăng nhập để lưu sản phẩm yêu thích!');

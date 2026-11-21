@@ -1,5 +1,5 @@
+import { Link } from 'react-router-dom';
 import menWatchImage from '../../../assets/images/home-category/men-watches.avif';
-//import womenWatchImage from '../../../assets/images/home-category/women-watches.avif';
 import womenWatchImage1 from '../../../assets/images/home-category/women-watches-1.avif';
 
 interface CategoryItem {
@@ -16,14 +16,14 @@ const CATEGORY_LIST: CategoryItem[] = [
         title: "Men's Watches",
         linkText: 'Shop now',
         image: menWatchImage,
-        linkUrl: '/collections/men',
+        linkUrl: '/products?gender=HIM',
     },
     {
         id: 2,
         title: "Women's Watches",
         linkText: 'Shop now',
         image: womenWatchImage1,
-        linkUrl: '/collections/women',
+        linkUrl: '/products?gender=HER',
     },
 ];
 
@@ -31,7 +31,11 @@ export default function CategoryBanner() {
     return (
         <section className="category-banner">
             {CATEGORY_LIST.map((item) => (
-                <div key={item.id} className="category-banner__item">
+                <Link
+                    key={item.id}
+                    to={item.linkUrl}
+                    className="category-banner__item"
+                >
                     <img
                         src={item.image}
                         alt={item.title}
@@ -42,11 +46,11 @@ export default function CategoryBanner() {
 
                     <div className="category-banner__content">
                         <h2 className="category-banner__title">{item.title}</h2>
-                        <a href={item.linkUrl} className="category-banner__link">
+                        <span className="category-banner__link">
                             {item.linkText}
-                        </a>
+                        </span>
                     </div>
-                </div>
+                </Link>
             ))}
         </section>
     );

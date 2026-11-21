@@ -4,9 +4,9 @@ import type { WishlistItem } from '../utils/types';
 const http = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
 export const wishlistApi = {
-    async getWishlistByUserId(userId: string): Promise<WishlistItem[]> {
-        const { data } = await http.get<WishlistItem[]>('/wishlist', { params: { userId } });
-        return data;
+    async getWishlistByUserId(userId: string | number): Promise<WishlistItem[]> {
+        const { data } = await http.get<(WishlistItem & { userId?: string | number })[]>('/wishlist');
+        return data.filter((item) => String(item.userId) === String(userId));
     },
 
     async addToWishlist(item: Omit<WishlistItem, 'id'>): Promise<WishlistItem> {

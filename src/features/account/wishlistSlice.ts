@@ -25,7 +25,16 @@ export const fetchUserWishlist = createAsyncThunk<
         try {
             const userId = getState().auth.user?.id;
             if (!userId) return [];
-            return await wishlistApi.getWishlistByUserId(userId);
+            const list = await wishlistApi.getWishlistByUserId(userId);
+
+            const uniqueMap = new Map<string, WishlistItem>();
+            for (const item of list) {
+                const key = String(item.watchId ?? item.productId);
+                if (!uniqueMap.has(key)) {
+                    uniqueMap.set(key, item);
+                }
+            }
+            return Array.from(uniqueMap.values());
         } catch (error: any) {
             return rejectWithValue(error.message || 'Không thể tải danh sách yêu thích');
         }
@@ -40,8 +49,14 @@ export const addToWishlist = createAsyncThunk<
     'wishlist/addToWishlist',
     async (product, { getState, rejectWithValue }) => {
         try {
-            const userId = getState().auth.user?.id;
+            const state = getState();
+            const userId = state.auth.user?.id;
             if (!userId) throw new Error('Vui lòng đăng nhập để lưu sản phẩm yêu thích');
+
+            const existing = state.wishlist.items.find(
+                (item) => String(item.watchId ?? item.productId) === String(product.watchId)
+            );
+            if (existing) return existing;
 
             const newItem = {
                 userId,
@@ -85,7 +100,14 @@ const wishlistSlice = createSlice({
                 state.items = action.payload;
             })
             .addCase(addToWishlist.fulfilled, (state, action) => {
-                state.items.push(action.payload);
+                const exists = state.items.some(
+                    (item) =>
+                        item.id === action.payload.id ||
+                        String(item.watchId ?? item.productId) === String(action.payload.watchId ?? action.payload.productId)
+                );
+                if (!exists) {
+                    state.items.push(action.payload);
+                }
             })
             .addCase(removeFromWishlist.fulfilled, (state, action) => {
                 state.items = state.items.filter((item) => item.id !== action.payload);
