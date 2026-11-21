@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAddToCart } from '../../cart';
 import { formatPrice } from '../../cart';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
 import { addToWishlist, removeFromWishlist } from '../../account/wishlistSlice.ts';
 import type { Watch } from '../../products';
+import {useAddToCartHero} from "../../cart/useAddToCartHero.ts";
 
 const COLLECTIONS = ['SERPENTI', 'OCTO FINISSIMO', 'BVLGARI ALUMINIUM'] as const;
 
 export default function CollectionShowcase() {
     const dispatch = useAppDispatch();
-    const addItem = useAddToCart();
+    const addToCartChecked = useAddToCartHero();
 
     const user = useAppSelector((state) => state.auth.user);
     const wishlistItems = useAppSelector((state) => state.wishlist?.items || []);
@@ -102,13 +102,13 @@ export default function CollectionShowcase() {
                                     type="button"
                                     className="product-card__add"
                                     onClick={() =>
-                                        addItem({
+                                        addToCartChecked({
                                             productId: product.id,
                                             name: product.name,
                                             description,
                                             image: product.images[0],
                                             price: product.price,
-                                        })
+                                        }, 1)
                                     }
                                 >
                                     ADD TO BAG

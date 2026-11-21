@@ -253,6 +253,11 @@
     cursor: pointer;
 }
 
+.product-detail__qty-btn:disabled {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
 .product-detail__qty-btn:hover {
     background: var(--pd-panel);
 }

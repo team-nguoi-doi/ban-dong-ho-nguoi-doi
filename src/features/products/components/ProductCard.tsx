@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { Watch } from '../utils/types';
 import { formatPrice } from '../../cart';
-import { useAddToCart } from '../../cart';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { addToWishlist, removeFromWishlist } from '../../account/wishlistSlice';
+import {useAddToCartHero} from "../../cart/useAddToCartHero.ts";
 
 interface ProductCardProps {
     watch: Watch;
@@ -12,7 +12,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ watch }: ProductCardProps) {
     const dispatch = useAppDispatch();
-    const addItem = useAddToCart();
+    const addToCartChecked = useAddToCartHero();
 
     const [isHovered, setIsHovered] = useState(false);
     const [imgIndex, setImgIndex] = useState(0);
@@ -169,13 +169,13 @@ export default function ProductCard({ watch }: ProductCardProps) {
                                 type="button"
                                 className="bv-card__add-bag"
                                 onClick={() =>
-                                    addItem({
+                                    addToCartChecked({
                                         productId: watch.id,
                                         name: watch.name,
                                         description: subtitle,
                                         image: watch.images[0],
                                         price: watch.price,
-                                    })
+                                    }, 1)
                                 }
                             >
                                 ADD TO BAG

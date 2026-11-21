@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import type { Product } from "../util/types";
 import { PLACEHOLDER_IMAGE } from "../mockData.ts";
-import { formatPrice, useAddToCart } from "../../cart";
+import { formatPrice } from "../../cart";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { addToWishlist, removeFromWishlist } from "../../account/wishlistSlice";
 import '../css/ProductDetail.css';
+import {useAddToCartHero} from "../../cart/useAddToCartHero.ts";
 
 function getSwatchClass(color: string): string {
     const normalized = color.toLowerCase();
@@ -22,7 +23,7 @@ function ProductDetail() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const addItem = useAddToCart();
+    const addToCartChecked = useAddToCartHero();
 
     const user = useAppSelector((state) => state.auth.user);
     const wishlistItems = useAppSelector((state) => state.wishlist?.items || []);
@@ -104,15 +105,13 @@ function ProductDetail() {
     };
 
     const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) {
-            addItem({
-                productId: String(product.id),
-                name: product.name,
-                description,
-                image: images[0],
-                price: product.price,
-            });
-        }
+        addToCartChecked({
+            productId: product.id,
+            name: product.name,
+            description,
+            image: images[0],
+            price: product.price,
+        }, quantity)
     };
 
     const handleBuyNow = () => {
@@ -203,6 +202,7 @@ function ProductDetail() {
                                 <button
                                     type="button"
                                     className="product-detail__qty-btn"
+                                    disabled={quantity <= 1}
                                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                                     aria-label="Giảm số lượng"
                                 >

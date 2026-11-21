@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { fetchUserWishlist, removeFromWishlist } from '../wishlistSlice';
-import { useAddToCart, formatPrice } from '../../cart';
+import {useAddToCartHero} from "../../cart/useAddToCartHero.ts";
+import {formatPrice} from "../../cart";
 
 export const Wishlist: React.FC = () => {
     const dispatch = useAppDispatch();
-    const addItem = useAddToCart();
+    const addToCartChecked = useAddToCartHero();
 
     const { items: wishlist = [], loading, error } = useAppSelector(
         (state) => state.wishlist || { items: [], loading: false, error: null }
@@ -74,14 +75,14 @@ export const Wishlist: React.FC = () => {
                                         type="button"
                                         className="btn-add-to-bag"
                                         disabled={!item.inStock}
-                                        onClick={() => {
-                                            addItem({
+                                        onClick={() =>
+                                            addToCartChecked({
                                                 productId: item.productId || (item.watchId ? String(item.watchId) : item.id),
                                                 name: item.productName,
                                                 image: item.image,
                                                 price: item.price,
-                                            });
-                                        }}
+                                            }, 1)
+                                        }
                                     >
                                         {item.inStock ? 'ADD TO SHOPPING BAG' : 'UNAVAILABLE'}
                                     </button>

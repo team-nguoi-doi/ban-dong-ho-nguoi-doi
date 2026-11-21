@@ -1,10 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "../features/header";
-import { selectCartCount } from "../features/cart/CartSlice.ts";
+import {selectedCartQuantity} from "../features/cart/CartSlice.ts";
 import { useAppSelector } from "../hooks/hooks.ts";
+import ToastContainer from "../features/toast/components/ToastContainer.tsx";
 
 export default function MainLayout() {
-    const cartCount = useAppSelector(selectCartCount);
+    const cartCount = useAppSelector(selectedCartQuantity);
 
     return (
         <>
@@ -12,6 +13,7 @@ export default function MainLayout() {
             <main>
                 <Outlet/>
             </main>
+            <ToastContainer />
         </>
     )
 }

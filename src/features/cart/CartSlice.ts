@@ -100,6 +100,7 @@ export const selectCartItems = (state: WithCart) => state.cart.items;
 export const selectSelectedIds = (state: WithCart) => state.cart.selectedIds;
 
 export const selectCartCount = (state: WithCart) => state.cart.items.length;
+export const selectedCartQuantity = (state: WithCart) => state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
 export const selectSelectedTotal = (state: WithCart) =>
     state.cart.items

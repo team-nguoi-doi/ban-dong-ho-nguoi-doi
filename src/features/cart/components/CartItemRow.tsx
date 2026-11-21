@@ -8,12 +8,20 @@ import {
 } from '../CartSlice';
 import { formatPrice } from '../utils/format';
 import type { CartItem } from '../utils/types';
+import {addToast} from "../../toast/toastSlice.ts";
 
 export default function CartItemRow({ item }: { item: CartItem }) {
     const dispatch = useAppDispatch();
     const checked = useAppSelector(selectSelectedIds).includes(item.productId);
     const setQty = (quantity: number) =>
         dispatch(updateQuantity({ productId: item.productId, quantity }));
+
+    const increase = () => {
+        if(item.quantity >= MAX_QUANTITY) {
+            dispatch(addToast(`Mỗi sản phẩm chỉ mua tối đa ${MAX_QUANTITY} cái.`));
+        }
+        setQty(item.quantity + 1);
+    }
 
     return (
         <li className={`cart-row ${checked ? 'cart-row--checked' : ''}`}>
@@ -51,14 +59,10 @@ export default function CartItemRow({ item }: { item: CartItem }) {
                     <button
                         type="button"
                         className="cart-qty__btn"
-                        onClick={() => setQty(item.quantity + 1)}
-                        disabled={item.quantity >= MAX_QUANTITY}
+                        onClick={increase}
                         aria-label="Tăng số lượng"
                     >+</button>
                 </div>
-                {item.quantity >= MAX_QUANTITY && (
-                    <span className="cart-row__warning">Tối đa {MAX_QUANTITY}</span>
-                )}
             </div>
 
             <div className="cart-row__total" data-label="Số tiền">{formatPrice(item.price * item.quantity)}</div>

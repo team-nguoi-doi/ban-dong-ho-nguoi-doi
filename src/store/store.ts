@@ -5,6 +5,7 @@ import orderReducer from "../features/orders/orderSlice.ts";
 import wishlistReducer from "../features/account/wishlistSlice.ts";
 import cartReducer, { saveItems } from "../features/cart/CartSlice.ts";
 import { productReducer } from '../features/products';
+import toastReducer from '../features/toast/toastSlice.ts';
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         wishlist: wishlistReducer,
         cart: cartReducer,
         products: productReducer,
+        toast: toastReducer,
     },
 });
 
