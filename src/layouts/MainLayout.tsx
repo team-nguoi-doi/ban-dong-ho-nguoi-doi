@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Header } from "../features/header";
 import {selectedCartQuantity} from "../features/cart/CartSlice.ts";
 import { useAppSelector } from "../hooks/hooks.ts";
+import { Footer } from "../features/footer";
 import ToastContainer from "../features/toast/components/ToastContainer.tsx";
 
 export default function MainLayout() {
@@ -13,6 +14,7 @@ export default function MainLayout() {
             <main>
                 <Outlet/>
             </main>
+            <Footer />
             <ToastContainer />
         </>
     )
