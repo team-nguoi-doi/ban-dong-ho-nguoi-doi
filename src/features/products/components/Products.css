@@ -358,7 +358,7 @@
 
 .bv-card__edition {
     position: absolute;
-    bottom: 1.2rem;
+    bottom: 5.2rem;
     left: 50%;
     transform: translateX(-50%);
     font-size: 1.15rem;
@@ -462,6 +462,29 @@
     text-transform: uppercase;
     cursor: pointer;
     color: var(--color-text);
+}
+
+.bv-card__quick-add {
+    position: absolute;
+    left: 1.2rem;
+    right: 1.2rem;
+    bottom: 1.2rem;
+    padding: 1rem;
+    background-color: var(--color-text);
+    color: var(--color-surface);
+    border: none;
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 3;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.bv-card__quick-add:hover {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
 }
 
 .plp-state {

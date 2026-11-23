@@ -81,6 +81,21 @@ export default function ProductCard({ watch }: ProductCardProps) {
     const currentImage = watch.images[imgIndex] || watch.images[0];
     const subtitle = `${watch.movement} - ${watch.caseMaterial}`;
 
+    const handleAddToCart = (e?: React.MouseEvent) => {
+        e?.preventDefault();
+        e?.stopPropagation();
+        addToCartChecked(
+            {
+                productId: watch.id,
+                name: watch.name,
+                description: subtitle,
+                image: watch.images[0],
+                price: watch.price,
+            },
+            1
+        );
+    };
+
     return (
         <div
             className="bv-card-slot"
@@ -142,6 +157,14 @@ export default function ProductCard({ watch }: ProductCardProps) {
                     {!isHovered && watch.isNew && (
                         <span className="bv-card__edition">New edition</span>
                     )}
+
+                    <button
+                        type="button"
+                        className="bv-card__quick-add"
+                        onClick={handleAddToCart}
+                    >
+                        ADD TO BAG
+                    </button>
                 </div>
 
                 <div className="bv-card__details">
@@ -165,21 +188,6 @@ export default function ProductCard({ watch }: ProductCardProps) {
                             >
                                 DISCOVER MORE
                             </Link>
-                            <button
-                                type="button"
-                                className="bv-card__add-bag"
-                                onClick={() =>
-                                    addToCartChecked({
-                                        productId: watch.id,
-                                        name: watch.name,
-                                        description: subtitle,
-                                        image: watch.images[0],
-                                        price: watch.price,
-                                    }, 1)
-                                }
-                            >
-                                ADD TO BAG
-                            </button>
                         </div>
                     </div>
                 </div>
