@@ -10,7 +10,7 @@ export const orderApi = {
             status: 'Pending',
             createdAt: new Date().toISOString(),
         })
-        return data
+        return data;
     },
 
     async getByUser(userId: string | number): Promise<Order[]> {

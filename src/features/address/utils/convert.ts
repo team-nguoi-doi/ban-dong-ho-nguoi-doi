@@ -51,3 +51,6 @@ export const getDefaultShipping = (u?: HasAddresses | null) =>
     ?? u?.addresses?.find((a) => a.isDefaultShipping)
     ?? u?.addresses?.find((a) => a.isDefault)
     ?? null;
+
+export const formatAddressValue = (v?: Partial<AddressValue> | null) =>
+    v ? [v.detail, v.wardName, v.provinceName].filter(Boolean).join(', ') : '';

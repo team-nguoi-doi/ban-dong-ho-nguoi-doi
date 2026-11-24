@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks.ts';
 import { formatPrice } from '../../cart';
 import {cancelOrder, fetchUserOrders} from "../../orders/orderSlice.ts";
+import {useNavigate} from "react-router-dom";
 
 type OrderStatusFilter = 'ALL' | 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
 
 export const OrderList: React.FC = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const { items, loading, error } = useAppSelector((state) => state.orders);
     const [activeTab, setActiveTab] = useState<OrderStatusFilter>('ALL');
@@ -21,8 +23,12 @@ export const OrderList: React.FC = () => {
         return order.status.toUpperCase() === activeTab;
     });
 
-    if (loading) return <div className="order-list-page"><p>Loading your orders...</p></div>;
-    if (error) return <div className="order-list-page"><p className="account__error">{error}</p></div>;
+    if (loading) return <div className="order-list-page">
+        <p>Loading your orders...</p>
+    </div>;
+    if (error) return <div className="order-list-page">
+        <p className="account__error">{error}</p>
+    </div>;
 
     return (
         <div className="order-list-page">
@@ -104,18 +110,23 @@ export const OrderList: React.FC = () => {
                                             <h4 className="item-title">{item.productName}</h4>
                                             <p className="item-qty">x{item.quantity}</p>
                                         </div>
-                                        <div className="item-price">{formatPrice(item.productPrice)}</div>
+                                        <div className="item-price">
+                                            {formatPrice(item.productPrice)}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
 
                             <div className="order-card__footer">
                                 <div className="order-total">
-                                    Order Total: <span className="total-amount">{formatPrice(order.total)}</span>
+                                    Order Total: <span className="total-amount">
+                                    {formatPrice(order.total)}
+                                </span>
                                 </div>
                                 <div className="order-actions">
                                     {order.status === 'Pending' && (
-                                        <button type="button" className="btn-luxury-secondary"
+                                        <button type="button"
+                                                className="btn-luxury-secondary"
                                                 onClick={() => dispatch(cancelOrder(order.id))}>
                                             Cancel Order
                                         </button>
@@ -125,7 +136,9 @@ export const OrderList: React.FC = () => {
                                             Buy Again
                                         </button>
                                     )}
-                                    <button type="button" className="btn-luxury-primary">
+                                    <button type="button"
+                                            className="btn-luxury-primary"
+                                            onClick={() => navigate(`${order.id}`)}>
                                         View Details
                                     </button>
                                 </div>

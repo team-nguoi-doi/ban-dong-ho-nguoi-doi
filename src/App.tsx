@@ -16,6 +16,7 @@ import ProductListPage from "./pages/ProductListPage.tsx";
 import ProductDetail from "./features/product/components/ProductDetail.tsx";
 import {AddressPage} from "./features/account/components/AddressPage.tsx";
 import {fetchUserWishlist} from "./features/account/wishlistSlice.ts";
+import OrderDetail from "./features/orders/components/OrderDetail.tsx";
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
                     <Route path="personal-info" element={<PersonalInfor/>}></Route>
                     <Route path="address" element={<AddressPage />}></Route>
                     <Route path="orders" element={<OrderList />} />
+                    <Route path="orders/:id" element={<OrderDetail/>} />
                     <Route path="wishlist" element={<Wishlist />} />
                   </Route>
 
