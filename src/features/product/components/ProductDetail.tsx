@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { addToWishlist, removeFromWishlist } from "../../account/wishlistSlice";
 import '../css/ProductDetail.css';
 import {useAddToCartHero} from "../../cart/useAddToCartHero.ts";
+import {ProductComments} from "../../comments/components/ProductComments.tsx";
 
 function getSwatchClass(color: string): string {
     const normalized = color.toLowerCase();
@@ -348,6 +349,8 @@ function ProductDetail() {
                         </div>
                     </details>
                 </div>
+
+                <ProductComments productId={id!} />
             </div>
         </main>
     );

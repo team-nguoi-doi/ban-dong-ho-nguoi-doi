@@ -10,7 +10,7 @@ export default function GuestVao() {
     }
 
     if(isAuthenticated) {
-        const from = location.state?.from?.pathname ?? '/';
+        const from = (location.state as { from: string  | null})?.from ?? '/';
         return <Navigate to={from} replace={true} />;
     }
 

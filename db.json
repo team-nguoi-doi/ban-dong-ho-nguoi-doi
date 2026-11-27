@@ -559,5 +559,31 @@
       "id": "R6_xXkvhHtU"
     }
   ],
+  "comments": [
+    {
+      "productId": "watch-2",
+      "userId": "Vkuhn0MRUUc",
+      "userName": "Hana Lee",
+      "content": "hello",
+      "createdAt": "2026-11-27T08:16:11.863Z",
+      "id": "aMU4UA7V6eQ"
+    },
+    {
+      "productId": "watch-2",
+      "userId": "KiUXk1Y_f3Q",
+      "userName": "Nguyễn Thị Hồng Hạnh",
+      "content": "tui là trùm boom hàng việt nam, mà ko nỡ bom sản phẩm này",
+      "createdAt": "2026-11-27T08:19:37.255Z",
+      "id": "TV6FyzysHHI"
+    },
+    {
+      "productId": "watch-2",
+      "userId": "Vkuhn0MRUUc",
+      "userName": "Hana Lee",
+      "content": "sản phẩm cực kỳ chất lượng uy tín",
+      "createdAt": "2026-11-27T08:20:09.755Z",
+      "id": "cORS23-9dic"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }
