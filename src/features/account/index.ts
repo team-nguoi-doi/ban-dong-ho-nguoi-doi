@@ -6,3 +6,5 @@ export type { PersonalInfoType } from './utils/types';
 
 export { personalInfoVal } from './utils/validation';
 export type { PersonalInfoForm } from './utils/validation';
+
+import './css/Account.css';

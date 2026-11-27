@@ -34,7 +34,7 @@
     padding: 0 14px;
     border: 1px solid var(--af-line);
     border-radius: 2px;
-    background-color: #fff;
+    background-color: var(--color-surface);
     color: var(--af-text);
     font: inherit;
     font-size: 1.5rem;
@@ -68,7 +68,7 @@
 }
 
 .address-fields__select:disabled {
-    background-color: #f4f4f4;
+    background-color: var(--color-bg);
     color: var(--af-muted);
     cursor: not-allowed;
 }
@@ -100,4 +100,8 @@
     .address-fields__input {
         transition: none;
     }
+}
+
+[data-theme='dark'] .address-fields__select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23f2f2f0' stroke-width='1.6'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
 }

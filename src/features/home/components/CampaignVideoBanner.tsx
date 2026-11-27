@@ -73,7 +73,6 @@ export default function CampaignVideoBanner() {
             >
                 <h2
                     style={{
-                        fontFamily: "'Cormorant Garamond', Georgia, serif",
                         fontSize: 'clamp(2.2rem, 4vw, 3.8rem)',
                         letterSpacing: '0.18em',
                         fontWeight: 500,

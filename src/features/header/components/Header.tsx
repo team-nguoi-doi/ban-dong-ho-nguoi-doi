@@ -21,6 +21,22 @@ function Header({ cartCount = 0, transparent = false }: HeaderProps) {
     const [menuOpen, setMenuOpen] = useState(false)
     const [keyword, setKeyword] = useState('')
     const [scrolled, setScrolled] = useState(false)
+
+    const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    });
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    };
+
     const inputRef = useRef<HTMLInputElement>(null)
     const accountRef = useRef<HTMLDivElement>(null)
     const dispatch = useAppDispatch();
@@ -120,6 +136,25 @@ function Header({ cartCount = 0, transparent = false }: HeaderProps) {
                                 <path d="M3 7l9 6 9-6" />
                             </svg>
                         </Link>
+
+                        <button
+                            type="button"
+                            className="header__icon-btn"
+                            onClick={toggleTheme}
+                            aria-label={theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'}
+                            title={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
+                        >
+                            {theme === 'dark' ? (
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="4" />
+                                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                                </svg>
+                            ) : (
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                                </svg>
+                            )}
+                        </button>
 
                         {isInitialized && isAuthenticated && (
                             <>

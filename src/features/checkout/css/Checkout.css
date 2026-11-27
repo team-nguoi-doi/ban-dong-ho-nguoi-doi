@@ -106,7 +106,7 @@
 }
 
 .checkout__required {
-    color: #d92d4a;
+    color: var(--color-error, #d92d4a);
 }
 
 .checkout__input {
@@ -123,7 +123,7 @@
 }
 
 .checkout__input::placeholder {
-    color: #8c8c8c;
+    color: var(--color-text-muted, #8c8c8c);
 }
 
 .checkout__input:hover {
@@ -407,11 +407,15 @@
 .checkout__error {
     margin-top: 20px;
     padding: 10px 12px;
-    border: 1px solid #d92d4a;
+    border: 1px solid var(--color-error);
     border-radius: 2px;
     background: #fdeef1;
-    color: #d92d4a;
+    color: var(--color-error);
     font-size: 1.3rem;
+}
+
+[data-theme='dark'] .checkout__error {
+    background: rgba(240, 68, 97, 0.14);
 }
 
 /* Nút đang gửi đơn */

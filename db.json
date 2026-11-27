@@ -6,8 +6,47 @@
       "email": "hanhan123@gmail.com",
       "password": "Hanhanlethi2005@",
       "title": "Ms.",
-      "phone": "",
-      "dateOfBirth": ""
+      "phone": "0912345678",
+      "dateOfBirth": "",
+      "addresses": [
+        {
+          "id": "1795777549593",
+          "fullName": "Hân Lê Thị Hân",
+          "phone": "0912345678",
+          "streetAddress": "hgfkhk",
+          "provinceCode": "75",
+          "city": "Thành phố Đồng Nai",
+          "wardCode": "26089",
+          "region": "Phường Bình Lộc",
+          "country": "Việt Nam",
+          "isDefaultShipping": false,
+          "isDefaultBilling": true
+        },
+        {
+          "id": "1795782834829",
+          "fullName": "Hân Lê Thị Hân",
+          "phone": "0912345678",
+          "streetAddress": "hgfkhk",
+          "provinceCode": "92",
+          "city": "Thành phố Cần Thơ",
+          "wardCode": "31168",
+          "region": "Phường Bình Thủy",
+          "country": "Việt Nam",
+          "isDefaultShipping": false,
+          "isDefaultBilling": false
+        }
+      ],
+      "billingAddress": {
+        "fullName": "Lê Thị Hân",
+        "phone": "0912345678",
+        "streetAddress": "hgfkhk",
+        "city": "Thành phố Đồng Nai",
+        "region": "Phường Tam Hiệp",
+        "country": "Việt Nam",
+        "provinceCode": "75",
+        "wardCode": "26017",
+        "isDefaultBilling": true
+      }
     },
     {
       "fullName": "Nguyễn Thị Hồng Hạnh",
@@ -344,6 +383,16 @@
       "image": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw600f5759/images/images/1260570.png",
       "inStock": true,
       "id": "SsuOzxE90mw"
+    },
+    {
+      "userId": "1",
+      "watchId": "watch-9",
+      "productId": "watch-9",
+      "productName": "OCTO FINISSIMO 37 MM AUTOMATIC WATCH",
+      "price": 449000000,
+      "image": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw3ad00aac/images/images/1706542.png",
+      "inStock": true,
+      "id": "9kT40dpr_jw"
     }
   ],
   "orders": [
@@ -557,6 +606,65 @@
       "status": "Cancelled",
       "createdAt": "2026-11-24T00:23:00.172Z",
       "id": "R6_xXkvhHtU"
+    },
+    {
+      "userId": "1",
+      "items": [
+        {
+          "productId": "watch-2",
+          "productName": "BVLGARI ALUMINIUM CHRONOGRAPH WATCH",
+          "productImage": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw600f5759/images/images/1260570.png",
+          "productPrice": 115000000,
+          "quantity": 6
+        },
+        {
+          "productId": "watch-5",
+          "productName": "SERPENTI TUBOGAS SINGLE SPIRAL WATCH",
+          "productImage": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwd4cb67a1/images/images/1149131.png",
+          "productPrice": 183000000,
+          "quantity": 8
+        },
+        {
+          "productId": "watch-1",
+          "productName": "BVLGARI ALUMINIUM WATCH",
+          "productImage": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwbe039851/images/images/1260573.png",
+          "productPrice": 89900000,
+          "quantity": 2
+        },
+        {
+          "productId": "watch-3",
+          "productName": "BVLGARI ALUMINIUM GMT WATCH",
+          "productImage": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dwcf916491/images/images/1679535.png",
+          "productPrice": 102000000,
+          "quantity": 2
+        },
+        {
+          "productId": "watch-4",
+          "productName": "BVLGARI ALUMINIUM DUCATI SPECIAL EDITION",
+          "productImage": "https://media2.bulgari.com/f_auto,q_auto,c_pad,w_800,h_800/production/dw66bff4c4/images/images/1488363.png",
+          "productPrice": 136000000,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 2673800000,
+      "shippingFee": 30000,
+      "total": 2673830000,
+      "payment": "cod",
+      "recipient": {
+        "name": "Lê Thị Hân",
+        "phone": "0912345678",
+        "address": {
+          "provinceCode": "75",
+          "provinceName": "Thành phố Đồng Nai",
+          "wardCode": "26017",
+          "wardName": "Phường Tam Hiệp",
+          "detail": "hgfkhk"
+        }
+      },
+      "note": "",
+      "status": "Pending",
+      "createdAt": "2026-11-27T12:34:31.974Z",
+      "id": "Vgs4P-1bOsc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -9,6 +9,9 @@ html {
 body {
   font-size: 1.6rem;
   font-family: 'Open Sans', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 input,
@@ -54,4 +57,28 @@ a {
   --color-warning: #e69a14;
 
   --color-accent: #b8975a;
+}
+
+[data-theme='dark'] {
+  --color-bg: #0f1012;
+  --color-surface: #17191c;
+  --color-card-bg: #1e2024;
+
+  --color-primary: #1ac7b6;
+  --color-primary-hover: #22d9c7;
+  --color-primary-active: #17b3a4;
+  --color-on-primary: #0d0e10;
+
+  --color-text: #f2f2f0;
+  --color-text-secondary: #a3aab2;
+  --color-text-muted: #6e757d;
+
+  --color-border: #2a2d32;
+  --color-border-input: #454a52;
+
+  --color-error: #f04461;
+  --color-success: #22c574;
+  --color-warning: #f5ad27;
+
+  --color-accent: #c9a86a;
 }

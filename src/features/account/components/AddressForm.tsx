@@ -263,7 +263,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                             placeholder="Full Name *"
                             className={errors.fullName ? 'input-error' : ''}
                         />
-                        {errors.fullName && <p className="field-error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.fullName}</p>}
+                        {errors.fullName && <p className="account__error">{errors.fullName}</p>}
                     </div>
 
                     <div className="form-group">
@@ -275,7 +275,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                             placeholder="Phone Number *"
                             className={errors.phone ? 'input-error' : ''}
                         />
-                        {errors.phone && <p className="field-error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.phone}</p>}
+                        {errors.phone && <p className="account__error">{errors.phone}</p>}
                     </div>
                 </div>
 
@@ -297,7 +297,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                                 </option>
                             ))}
                         </select>
-                        {errors.provinceCode && <p className="field-error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.provinceCode}</p>}
+                        {errors.provinceCode && <p className="account__error">{errors.provinceCode}</p>}
                     </div>
 
                     <div className="form-group">
@@ -321,7 +321,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                                 </option>
                             ))}
                         </select>
-                        {errors.wardCode && <p className="field-error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.wardCode}</p>}
+                        {errors.wardCode && <p className="v">{errors.wardCode}</p>}
                     </div>
                 </div>
 
@@ -334,7 +334,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                         placeholder="Street Name, Building, House No. *"
                         className={errors.streetAddress ? 'input-error' : ''}
                     />
-                    {errors.streetAddress && <p className="field-error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.streetAddress}</p>}
+                    {errors.streetAddress && <p className="account__error">{errors.streetAddress}</p>}
                 </div>
 
                 <div className="label-as-section">
