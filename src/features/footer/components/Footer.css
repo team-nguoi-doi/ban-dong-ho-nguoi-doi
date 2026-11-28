@@ -1,6 +1,7 @@
 .footer {
-    background-color: var(--color-text);
+    background-color: #111215;
     color: #d9d9d9;
+    border-top: 1px solid var(--color-border);
     margin-top: 6rem;
 }
 
@@ -16,7 +17,7 @@
 .footer__logo {
     height: 3.6rem;
     width: auto;
-    filter: brightness(0) invert(1);
+    /*filter: brightness(0) invert(1);*/
     margin-bottom: 1.4rem;
 }
 

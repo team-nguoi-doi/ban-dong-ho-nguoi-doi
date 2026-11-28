@@ -125,9 +125,9 @@ export default function ProductShowcase() {
                 <Link
                     to="/products"
                     style={{
-                        color: '#1a1a1a',
+                        color: 'var(--color-text)\'',
                         textDecoration: 'none',
-                        borderBottom: '1px solid #1a1a1a',
+                        borderBottom: '1px solid var(--color-text)',
                         paddingBottom: '3px',
                         fontSize: '1.1rem',
                         letterSpacing: '0.18em',
