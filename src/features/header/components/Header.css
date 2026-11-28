@@ -1,8 +1,8 @@
 .header {
-    --hd-fg: var(--color-text, #111);
-    --hd-inv: var(--color-surface, #fff);
-    --hd-bg: var(--color-surface, #fff);
-    --hd-line: var(--color-border, #e6e6e6);
+    --hd-fg: #111;
+    --hd-inv: #fff;
+    --hd-bg: #fff;
+    --hd-line: #e6e6e6;
 
     position: sticky;
     top: 0;
@@ -64,7 +64,6 @@
     width: auto;
     display: block;
     flex-shrink: 0;
-    transition: filter 0.3s ease;
 }
 
 .header__link {
@@ -105,7 +104,7 @@
 }
 
 .header__icon-btn:hover {
-    color: var(--color-primary-hover, #1dbfaf);
+    color: #1dbfaf;
     background: rgba(29, 191, 175, 0.12);
 }
 
@@ -114,14 +113,14 @@
     height: 48px;
     border-radius: 50%;
     margin: 0 4px;
-    background: var(--color-primary, #1ac7b6);
-    color: var(--color-on-primary, #111);
+    background: #1ac7b6;
+    color: #111;
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .header__icon-btn--cart:hover {
-    background: var(--color-primary-hover, #17b3a4);
-    color: var(--color-on-primary, #111);
+    background: #17b3a4;
+    color: #111;
     transform: translateY(-1px);
 }
 
@@ -133,9 +132,9 @@
 .header__icon-btn--cart .header__badge {
     top: -8px;
     right: -10px;
-    background: var(--color-error, #d92d4a);
+    background: #d92d4a;
     color: #fff;
-    border: 2px solid var(--hd-bg);
+    border: 2px solid #fff;
     box-sizing: content-box;
 }
 
@@ -147,7 +146,7 @@
     height: 16px;
     padding: 0 4px;
     border-radius: 8px;
-    background: var(--color-primary, #1dbfaf);
+    background: #1dbfaf;
     color: #fff;
     font-size: 1.1rem;
     line-height: 16px;
@@ -159,10 +158,9 @@
 }
 
 .header__icon-btn--user {
-    box-shadow: inset 0 0 0 2px var(--color-primary, #1ac7b6);
+    box-shadow: inset 0 0 0 2px #1ac7b6;
 }
 
-/* ----- Menu tài khoản ----- */
 .header__menu {
     position: absolute;
     top: calc(100% + 14px);
@@ -173,10 +171,10 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background: var(--color-surface);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+    background: #fff;
+    color: #111;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
     animation: header-menu-in 0.18s ease;
 }
 
@@ -194,13 +192,13 @@
 .header__menu-desc {
     font-size: 1.3rem;
     line-height: 1.5;
-    color: var(--color-text-secondary);
+    color: #636d77;
     margin-bottom: 4px;
 }
 
 .header__menu-hello {
     font-size: 1.3rem;
-    color: var(--color-text-secondary);
+    color: #636d77;
 }
 
 .header__menu-name {
@@ -225,14 +223,14 @@
 }
 
 .header__menu-btn--primary {
-    background: var(--color-primary, #1ac7b6);
-    color: var(--color-on-primary, #111);
-    border: 1px solid var(--color-primary, #1ac7b6);
+    background: #1ac7b6;
+    color: #111;
+    border: 1px solid #1ac7b6;
 }
 
 .header__menu-btn--primary:hover {
-    background: var(--color-primary-hover, #17b3a4);
-    border-color: var(--color-primary-hover, #17b3a4);
+    background: #17b3a4;
+    border-color: #17b3a4;
 }
 
 .header__menu-btn--primary:active {
@@ -240,14 +238,14 @@
 }
 
 .header__menu-btn--outline {
-    background: transparent;
-    color: var(--color-text);
-    border: 1px solid var(--color-text);
+    background: #fff;
+    color: #111;
+    border: 1px solid #111;
 }
 
 .header__menu-btn--outline:hover {
-    background: var(--color-text);
-    color: var(--color-surface);
+    background: #111;
+    color: #fff;
 }
 
 .header__menu-item {
@@ -256,21 +254,20 @@
     height: 48px;
     padding: 0 4px;
     font-size: 1.5rem;
-    color: var(--color-text);
-    border-bottom: 1px solid var(--color-border);
+    color: #111;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .header__menu-item:hover {
-    color: var(--color-primary-hover, #139e91);
+    color: #139e91;
 }
 
-/* ----- Khung tìm kiếm toàn màn hình ----- */
 .search-panel {
     position: fixed;
     inset: 0;
     z-index: 200;
-    background: var(--color-bg);
-    color: var(--color-text);
+    background: #f4f4f4;
+    color: #111;
     overflow-y: auto;
     animation: search-panel-in 0.25s ease;
 }
@@ -290,15 +287,15 @@
     align-items: center;
     justify-content: center;
     background: transparent;
-    border: 1px solid var(--color-border-input);
-    color: var(--color-text);
+    border: 1px solid #d9d9d9;
+    color: #111;
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease;
 }
 
 .search-panel__close:hover {
-    background: var(--color-text);
-    color: var(--color-surface);
+    background: #111;
+    color: #fff;
 }
 
 .search-panel__inner {
@@ -330,10 +327,10 @@
     width: 100%;
     height: 50px;
     padding: 0 52px 0 20px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-input);
+    background: #fff;
+    border: 1px solid #d9d9d9;
     font-size: 1.6rem;
-    color: var(--color-text);
+    color: #111;
 }
 
 .search-panel__field svg {
@@ -341,30 +338,22 @@
     right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--color-text-secondary);
     pointer-events: none;
 }
 
 .search-panel__submit {
     width: 112px;
     height: 50px;
-    background: var(--color-text);
-    color: var(--color-surface);
+    background: #111;
+    color: #fff;
     border: none;
     font-size: 1.4rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.search-panel__submit:hover:not(:disabled) {
-    background: var(--color-primary);
-    color: var(--color-on-primary);
 }
 
 .search-panel__submit:disabled {
-    background: var(--color-border);
-    color: var(--color-text-muted);
+    background: #d9d9d9;
     cursor: not-allowed;
 }
 
@@ -385,7 +374,7 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--color-border);
+    background: #d9d9d9;
 }
 
 .search-panel__grid {
@@ -401,14 +390,8 @@
     align-items: center;
     height: 100%;
     padding: 32px 16px 20px;
-    background: var(--color-card-bg);
-    color: var(--color-text);
-    border: 1px solid transparent;
-    transition: border-color 0.2s ease;
-}
-
-.search-card:hover {
-    border-color: var(--color-border-input);
+    background: #ececec;
+    color: #111;
 }
 
 .search-card img {
@@ -416,11 +399,6 @@
     aspect-ratio: 1;
     object-fit: contain;
     mix-blend-mode: multiply;
-}
-
-/* Tắt multiply trên nền tối để ảnh đồng hồ không bị đen chìm vào nền */
-[data-theme='dark'] .search-card img {
-    mix-blend-mode: normal;
 }
 
 .search-card__name {
@@ -433,17 +411,15 @@
 .search-card__price {
     margin-top: 4px;
     font-size: 1.3rem;
-    color: var(--color-text-secondary);
+    color: #636d77;
 }
 
 .search-card__tag {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    padding: 4px 10px;
-    background: var(--color-surface);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
+    top: 4px;
+    left: 4px;
+    padding: 6px 10px;
+    background: #fff;
     font-size: 1.2rem;
     font-weight: 600;
 }
@@ -451,7 +427,7 @@
 .header a:focus-visible,
 .header button:focus-visible,
 .search-panel__input:focus-visible {
-    outline: 2px solid var(--color-primary, #1dbfaf);
+    outline: 2px solid #1dbfaf;
     outline-offset: 2px;
 }
 
@@ -502,12 +478,4 @@
     .header__main {
         transition: none;
     }
-}
-
-.header__link--button {
-    background: none;
-    border: 0;
-    border-bottom: 1px solid transparent;
-    font-family: inherit;
-    cursor: pointer;
 }
