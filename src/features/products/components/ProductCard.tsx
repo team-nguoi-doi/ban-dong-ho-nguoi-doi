@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { Watch } from '../utils/types';
 import { formatPrice } from '../../cart';
+import { useAddToCart } from '../../cart';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { addToWishlist, removeFromWishlist } from '../../account/wishlistSlice';
-import {useAddToCartHero} from "../../cart/useAddToCartHero.ts";
 
 interface ProductCardProps {
     watch: Watch;
@@ -12,7 +12,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ watch }: ProductCardProps) {
     const dispatch = useAppDispatch();
-    const addToCartChecked = useAddToCartHero();
+    const addItem = useAddToCart();
 
     const [isHovered, setIsHovered] = useState(false);
     const [imgIndex, setImgIndex] = useState(0);
@@ -81,21 +81,6 @@ export default function ProductCard({ watch }: ProductCardProps) {
     const currentImage = watch.images[imgIndex] || watch.images[0];
     const subtitle = `${watch.movement} - ${watch.caseMaterial}`;
 
-    const handleAddToCart = (e?: React.MouseEvent) => {
-        e?.preventDefault();
-        e?.stopPropagation();
-        addToCartChecked(
-            {
-                productId: watch.id,
-                name: watch.name,
-                description: subtitle,
-                image: watch.images[0],
-                price: watch.price,
-            },
-            1
-        );
-    };
-
     return (
         <div
             className="bv-card-slot"
@@ -157,14 +142,6 @@ export default function ProductCard({ watch }: ProductCardProps) {
                     {!isHovered && watch.isNew && (
                         <span className="bv-card__edition">New edition</span>
                     )}
-
-                    <button
-                        type="button"
-                        className="bv-card__quick-add"
-                        onClick={handleAddToCart}
-                    >
-                        ADD TO BAG
-                    </button>
                 </div>
 
                 <div className="bv-card__details">
@@ -188,6 +165,21 @@ export default function ProductCard({ watch }: ProductCardProps) {
                             >
                                 DISCOVER MORE
                             </Link>
+                            <button
+                                type="button"
+                                className="bv-card__add-bag"
+                                onClick={() =>
+                                    addItem({
+                                        productId: watch.id,
+                                        name: watch.name,
+                                        description: subtitle,
+                                        image: watch.images[0],
+                                        price: watch.price,
+                                    })
+                                }
+                            >
+                                ADD TO BAG
+                            </button>
                         </div>
                     </div>
                 </div>
