@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { addToWishlist, removeFromWishlist } from "../../account/wishlistSlice";
 import '../css/ProductDetail.css';
 import {useAddToCartHero} from "../../cart/useAddToCartHero.ts";
-import {ProductComments} from "../../comments/components/ProductComments.tsx";
 
 function getSwatchClass(color: string): string {
     const normalized = color.toLowerCase();
@@ -234,7 +233,7 @@ function ProductDetail() {
                                 className="product-detail__btn product-detail__btn--primary"
                                 onClick={handleAddToCart}
                             >
-                                Thêm vào giỏ hàng
+                                ADD TO CART
                             </button>
                             <button
                                 type="button"
@@ -349,8 +348,6 @@ function ProductDetail() {
                         </div>
                     </details>
                 </div>
-
-                <ProductComments productId={id!} />
             </div>
         </main>
     );
